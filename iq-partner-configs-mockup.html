@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Partner Configurations · iq.groupon.com (1 of 2)</title>
+<style>
+  /* ---------- Tailwind-equivalent gray scale used by iq ---------- */
+  :root {
+    --gray-50:  #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --blue-600: #2563eb;
+    --blue-800: #1e40af;
+    --content-bg: #fafafa;
+    --groupon-green: #007C1F;
+
+    /* AntD Tag colors */
+    --tag-green-bg: #f6ffed; --tag-green-text: #389e0d; --tag-green-bd: #b7eb8f;
+    --tag-blue-bg:  #e6f4ff; --tag-blue-text:  #1677ff; --tag-blue-bd:  #91caff;
+    --tag-orange-bg:#fff7e6; --tag-orange-text:#d46b08; --tag-orange-bd:#ffd591;
+    --tag-red-bg:   #fff1f0; --tag-red-text:   #cf1322; --tag-red-bd:   #ffa39e;
+    --tag-gray-bg:  #fafafa; --tag-gray-text:  #595959; --tag-gray-bd:  #d9d9d9;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-size: 14px; color: var(--gray-900); background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- App shell ---------- */
+  .app { height: 100vh; display: flex; flex-direction: column; background: #fff; }
+
+  /* ---------- TopNavbar (sticky h-16 white border-b border-gray-200) ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50; background: #fff;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .topbar-inner {
+    height: 64px; display: flex; align-items: center; gap: 12px;
+    padding: 0 16px;
+  }
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 9999px;
+    color: var(--gray-700); background: transparent; border: 0; cursor: pointer;
+    transition: background-color .15s;
+  }
+  .icon-btn:hover { background: var(--gray-100); }
+  .topbar-logo {
+    width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+    background: var(--groupon-green); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 12px; letter-spacing: 0.5px;
+  }
+  .topbar-search-wrap {
+    flex: 1; display: flex; justify-content: flex-start;
+    padding: 0 16px; min-width: 0;
+  }
+  .search {
+    width: 100%; max-width: 576px;
+    display: flex; align-items: center; gap: 8px;
+    height: 38px; border-radius: 999px; padding: 0 14px;
+    background: var(--gray-100); color: var(--gray-500);
+    font-size: 14px;
+  }
+  .search input {
+    flex: 1; border: 0; outline: 0; background: transparent;
+    color: var(--gray-700); font-size: 14px;
+  }
+  .search input::placeholder { color: var(--gray-500); }
+  .topbar-right {
+    display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+  }
+  .country-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 32px; padding: 0 10px; border-radius: 999px;
+    border: 1px solid var(--gray-200); background: #fff;
+    color: var(--gray-700); font-size: 13px; cursor: pointer;
+  }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 9999px; background: #1677ff;
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; margin-left: 4px;
+  }
+  .presence-dot {
+    width: 8px; height: 8px; border-radius: 9999px; background: #22c55e;
+    margin-left: 6px; box-shadow: 0 0 0 2px #fff;
+  }
+
+  /* ---------- Body row (sidebar + main) ---------- */
+  .body-row { flex: 1; display: flex; min-height: 0; overflow: hidden; }
+
+  /* ---------- SideNavigation (expanded: w-264 white border-r) ---------- */
+  .sidebar {
+    width: 264px; flex-shrink: 0; background: #fff;
+    border-right: 1px solid var(--gray-200);
+    overflow-y: auto;
+  }
+  .sidebar nav { padding: 16px 12px; display: flex; flex-direction: column; gap: 24px; }
+  .nav-section { display: flex; flex-direction: column; gap: 4px; }
+  .nav-section-title {
+    padding: 0 12px 8px; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--gray-400);
+  }
+  .nav-link {
+    display: flex; align-items: center; gap: 12px;
+    border-radius: 16px; padding: 10px 12px;
+    font-size: 14px; font-weight: 500; color: var(--gray-600);
+    transition: background-color .12s, color .12s;
+    cursor: pointer; position: relative;
+  }
+  .nav-link:hover { background: var(--gray-50); color: var(--gray-900); }
+  .nav-link.active { background: var(--gray-100); color: var(--gray-900); }
+  .nav-link svg {
+    width: 18px; height: 18px; flex-shrink: 0;
+    stroke-width: 2; stroke: currentColor; fill: none;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .nav-link .label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-link .star {
+    width: 16px; height: 16px; color: var(--gray-300);
+    fill: none; stroke: currentColor; stroke-width: 2;
+  }
+  .nav-link .star.starred { color: #DDE1EB; fill: currentColor; }
+  .nav-link.new-entry { box-shadow: inset 0 0 0 1px #b7eb8f; background: #f6ffed; }
+  .nav-link.new-entry .label::after {
+    content: "NEW"; margin-left: 8px; font-size: 9px; font-weight: 700;
+    background: var(--groupon-green); color: #fff;
+    padding: 2px 5px; border-radius: 3px; letter-spacing: 0.04em;
+    vertical-align: middle;
+  }
+
+  /* ---------- Main ---------- */
+  .main {
+    flex: 1; min-width: 0; overflow-y: auto;
+    background: var(--content-bg);
+    padding: 24px;
+  }
+  .stack-6 > * + * { margin-top: 24px; }
+
+  /* ---------- PageHeader ---------- */
+  .page-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px;
+  }
+  .page-header h1 {
+    margin: 0; font-size: 30px; line-height: 1.15;
+    font-weight: 700; letter-spacing: -0.02em; color: var(--gray-900);
+  }
+  .page-header .desc {
+    margin: 4px 0 0; color: var(--gray-500);
+    font-size: 14px; line-height: 1.55; max-width: 42rem;
+  }
+  .page-header .actions { flex-shrink: 0; display: flex; gap: 8px; }
+
+  /* ---------- AntD-style Button ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 36px; padding: 0 16px; border-radius: 6px;
+    background: #fff; color: rgba(0,0,0,0.88);
+    border: 1px solid #d9d9d9; font-size: 14px; font-weight: 400;
+    cursor: pointer; transition: all .12s;
+  }
+  .btn:hover { color: #4096ff; border-color: #4096ff; }
+  .btn-primary {
+    background: #1677ff; color: #fff; border-color: #1677ff;
+    box-shadow: 0 2px 0 rgba(5,145,255,0.1);
+  }
+  .btn-primary:hover { background: #4096ff; color: #fff; border-color: #4096ff; }
+  .btn svg {
+    width: 14px; height: 14px; stroke: currentColor; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+  .input, .select {
+    height: 36px; padding: 0 11px; border-radius: 6px;
+    border: 1px solid #d9d9d9; background: #fff;
+    color: rgba(0,0,0,0.88); font-size: 14px; outline: 0;
+  }
+  .input:focus, .select:focus { border-color: #4096ff; }
+  .input { min-width: 280px; }
+  .input::placeholder { color: rgba(0,0,0,0.25); }
+  .select {
+    appearance: none; padding-right: 30px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M2 4l3 3 3-3' stroke='%23999' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat; background-position: right 10px center;
+  }
+  .toolbar .grow { flex: 1; }
+
+  /* ---------- ResponsiveTable wrapper (rounded-md border) ---------- */
+  .table-card {
+    border: 1px solid var(--gray-200); border-radius: 6px;
+    background: #fff; overflow: hidden;
+  }
+  table.tbl { width: 100%; border-collapse: collapse; }
+  table.tbl thead th {
+    background: var(--gray-50); text-align: left;
+    font-weight: 600; font-size: 12px; color: rgba(0,0,0,0.88);
+    padding: 12px 16px; border-bottom: 1px solid var(--gray-200);
+  }
+  table.tbl tbody td {
+    padding: 14px 16px; border-bottom: 1px solid var(--gray-200);
+    vertical-align: middle; font-size: 14px;
+    color: rgba(0,0,0,0.88);
+  }
+  table.tbl tbody tr:last-child td { border-bottom: none; }
+  table.tbl tbody tr:hover td { background: #fafafa; }
+
+  .partner-name { font-weight: 500; color: var(--gray-900); }
+  .partner-proto {
+    font-size: 12px; color: var(--gray-500);
+    margin-top: 2px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .env {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px; color: var(--gray-700);
+    background: var(--gray-100); padding: 2px 8px; border-radius: 4px;
+  }
+
+  /* ---------- AntD Tag styles ---------- */
+  .tag {
+    display: inline-flex; align-items: center; height: 22px; padding: 0 7px;
+    border-radius: 4px; font-size: 12px; line-height: 20px;
+    border: 1px solid var(--tag-gray-bd); background: var(--tag-gray-bg);
+    color: var(--tag-gray-text); white-space: nowrap;
+  }
+  .tag-green  { background: var(--tag-green-bg);  color: var(--tag-green-text);  border-color: var(--tag-green-bd); }
+  .tag-blue   { background: var(--tag-blue-bg);   color: var(--tag-blue-text);   border-color: var(--tag-blue-bd); }
+  .tag-orange { background: var(--tag-orange-bg); color: var(--tag-orange-text); border-color: var(--tag-orange-bd); }
+  .tag-red    { background: var(--tag-red-bg);    color: var(--tag-red-text);    border-color: var(--tag-red-bd); }
+
+  /* ---------- Action links in cells ---------- */
+  .actions { display: flex; gap: 14px; }
+  .link { color: #1677ff; cursor: pointer; font-size: 14px; }
+  .link:hover { color: #4096ff; text-decoration: underline; }
+  .link-muted { color: var(--gray-500); }
+  .link-muted:hover { color: var(--gray-700); }
+
+  /* ---------- Pagination (AntD style) ---------- */
+  .pager {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 8px; padding: 12px 16px; border-top: 1px solid var(--gray-200);
+    background: #fff;
+  }
+  .pager .meta { color: var(--gray-500); font-size: 13px; margin-right: 12px; }
+  .pg-btn {
+    min-width: 32px; height: 32px; padding: 0 8px; border-radius: 6px;
+    border: 1px solid var(--gray-200); background: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 13px; color: rgba(0,0,0,0.88);
+  }
+  .pg-btn:hover { color: #4096ff; border-color: #4096ff; }
+  .pg-btn.active { color: #1677ff; border-color: #1677ff; }
+
+  /* ---------- Annotation pin ---------- */
+  .pin {
+    position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+    width: 8px; height: 8px; border-radius: 9999px; background: var(--groupon-green);
+    box-shadow: 0 0 0 4px #f6ffed;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== TopNavbar ===== -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button class="icon-btn" aria-label="Toggle navigation">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="#" class="topbar-logo" title="Groupon IQ">IQ</a>
+      <div class="topbar-search-wrap">
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" placeholder="Search deals, brands, add permalink, SF Account ID…" />
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="country-pill">🇺🇸 US <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#666" stroke-width="1.5"><path d="M2 4l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="icon-btn" title="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        </button>
+        <div class="avatar">YG</div>
+        <span class="presence-dot" title="Online"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="body-row">
+
+    <!-- ===== SideNavigation (expanded view, w-264) ===== -->
+    <aside class="sidebar">
+      <nav>
+        <!-- Main (no header) -->
+        <div class="nav-section">
+          <a class="nav-link"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="label">Dashboard</span></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M3 9a2 2 0 0 1 0 6v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3a2 2 0 0 1 0-6V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1z"/><line x1="13" y1="5" x2="13" y2="19"/></svg><span class="label">Deals</span></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M9 11H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="8" rx="1"/></svg><span class="label">IQ Tasks</span></a>
+        </div>
+
+        <!-- Favorites -->
+        <div class="nav-section">
+          <div class="nav-section-title">Favorites</div>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M9 5H4a1 1 0 0 0-1 1v5l8.4 8.4a2 2 0 0 0 2.8 0l5.2-5.2a2 2 0 0 0 0-2.8L11 3H6"/><circle cx="7" cy="9" r="1"/></svg><span class="label">Brands</span><svg class="star starred" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg><span class="label">Accounts</span><svg class="star starred" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 14l4-4 4 4 5-5"/></svg><span class="label">Reports</span><svg class="star starred" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M19 7l-3 2M5 7l3 2M19 14l-3-1M5 14l3-1M19 21l-3-2M5 21l3-2M12 6V4M8 4l-1-2M16 4l1-2"/></svg><span class="label">Bugs &amp; Ideas</span><svg class="star starred" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+        </div>
+
+        <!-- More -->
+        <div class="nav-section">
+          <div class="nav-section-title">More</div>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span class="label">SEM UI</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M3 12V7a2 2 0 0 1 2-2h5l11 11-7 7-11-11z"/><circle cx="7" cy="9" r="1"/></svg><span class="label">Tags</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M9 11H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="8" rx="1"/></svg><span class="label">Tagging Jobs</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m10 8 6 4-6 4z" fill="currentColor"/></svg><span class="label">Videos</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg><span class="label">Templates</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="12" cy="15" r="1.5"/></svg><span class="label">PDS Config</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="label">Deal Alerts</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="label">Users</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="11" cy="16" r="3"/></svg><span class="label">Booking Availability</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+        </div>
+
+        <!-- Connections (top-level section, mirrors tpp's IA) -->
+        <div class="nav-section">
+          <div class="nav-section-title">Connections</div>
+          <a class="nav-link active" href="iq-partner-configs-mockup.html">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="6" cy="6" r="1.5" fill="currentColor"/><circle cx="6" cy="12" r="1.5" fill="currentColor"/><circle cx="6" cy="18" r="1.5" fill="currentColor"/></svg>
+            <span class="label">Manage Configurations</span>
+          </a>
+          <a class="nav-link" href="iq-setup-new-partner-mockup.html">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span class="label">Setup New Partner</span>
+          </a>
+        </div>
+
+        <!-- Dev Config -->
+        <div class="nav-section">
+          <div class="nav-section-title">Dev Config</div>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6z"/></svg><span class="label">API Tokens</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M4 21V4a1 1 0 0 1 1-1h11l-1 5 5-1v8H5"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span class="label">Feature Flags</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg><span class="label">Audit Logs</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><circle cx="12" cy="13" r="2"/><line x1="12" y1="17" x2="12" y2="21"/></svg><span class="label">Service Management</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M3 9a2 2 0 0 1 0 6v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3a2 2 0 0 1 0-6V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1z"/></svg><span class="label">Staging Deal Import</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="12" cy="15" r="1.5"/></svg><span class="label">Custom Fields</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M15 4V2a1 1 0 0 0-2 0v2M9 4V2a1 1 0 0 0-2 0v2M5 8h14M3 5h18a0 0 0 0 1 0 0v15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5z"/></svg><span class="label">Workflows</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="label">Notifications</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span class="label">BigQuery Explorer</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">Decision Form Preview</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+          <a class="nav-link"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="label">Documentation</span><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.6 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 8.9 8.6"/></svg></a>
+        </div>
+
+      </nav>
+    </aside>
+
+    <!-- ===== Main content ===== -->
+    <main class="main">
+      <div class="stack-6">
+
+        <!-- PageHeader -->
+        <div class="page-header">
+          <div>
+            <h1>Partner Configurations</h1>
+            <p class="desc">Onboard, certify, and manage third-party inventory partners across preproduction and production environments.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" onclick="location.href='iq-setup-new-partner-mockup.html'">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Setup New Partner
+            </button>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <input class="input" placeholder="Search by partner name or protocol" />
+          <select class="select"><option>All countries</option></select>
+          <select class="select"><option>All statuses</option></select>
+          <select class="select"><option>All environments</option></select>
+          <span class="grow"></span>
+          <button class="btn">Export CSV</button>
+        </div>
+
+        <!-- Table card -->
+        <div class="table-card">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width: 26%;">Name</th>
+                <th style="width: 14%;">Country / Currency</th>
+                <th style="width: 14%;">Environment</th>
+                <th style="width: 22%;">Status</th>
+                <th style="width: 24%;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="2">
+                  <div class="partner-name">ReleafClinics</div>
+                  <div class="partner-proto">voucher</div>
+                </td>
+                <td rowspan="2">US / USD</td>
+                <td><span class="env">preproduction</span></td>
+                <td><span class="tag tag-orange">Setup In Progress</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
+              </tr>
+              <tr>
+                <td><span class="env">production</span></td>
+                <td><span class="tag">Setup Not Started</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Setup</a></div></td>
+              </tr>
+
+              <tr>
+                <td rowspan="2">
+                  <div class="partner-name">Redeam_ES</div>
+                  <div class="partner-proto">rails_groupon_iframe</div>
+                </td>
+                <td rowspan="2">ES / EUR</td>
+                <td><span class="env">preproduction</span></td>
+                <td><span class="tag tag-green">Certified</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
+              </tr>
+              <tr>
+                <td><span class="env">production</span></td>
+                <td><span class="tag tag-blue">Ready</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
+              </tr>
+
+              <tr>
+                <td rowspan="2">
+                  <div class="partner-name">octo_palisis_NL</div>
+                  <div class="partner-proto">rails_groupon_iframe</div>
+                </td>
+                <td rowspan="2">NL / EUR</td>
+                <td><span class="env">preproduction</span></td>
+                <td><span class="tag tag-green">Certified</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+              </tr>
+              <tr>
+                <td><span class="env">production</span></td>
+                <td><span class="tag tag-blue">Ready</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+              </tr>
+
+              <tr>
+                <td rowspan="2">
+                  <div class="partner-name">Bokun</div>
+                  <div class="partner-proto">rails_groupon_iframe</div>
+                </td>
+                <td rowspan="2">US / USD</td>
+                <td><span class="env">preproduction</span></td>
+                <td><span class="tag tag-orange">Setup In Progress</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+              </tr>
+              <tr>
+                <td><span class="env">production</span></td>
+                <td><span class="tag">Setup Not Started</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Setup</a></div></td>
+              </tr>
+
+              <tr>
+                <td rowspan="2">
+                  <div class="partner-name">TripToGo</div>
+                  <div class="partner-proto">rails_groupon_iframe</div>
+                </td>
+                <td rowspan="2">US / USD</td>
+                <td><span class="env">preproduction</span></td>
+                <td><span class="tag tag-green">Test Ready For Review</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Review</a><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+              </tr>
+              <tr>
+                <td><span class="env">production</span></td>
+                <td><span class="tag">Setup Not Started</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Setup</a></div></td>
+              </tr>
+
+              <tr>
+                <td rowspan="2">
+                  <div class="partner-name">mamenta</div>
+                  <div class="partner-proto">rails_groupon_iframe</div>
+                </td>
+                <td rowspan="2">US / USD</td>
+                <td><span class="env">preproduction</span></td>
+                <td><span class="tag tag-green">Certified</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+              </tr>
+              <tr>
+                <td><span class="env">production</span></td>
+                <td><span class="tag tag-blue">Ready</span></td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pager">
+            <span class="meta">1 – 6 of 24 partners</span>
+            <button class="pg-btn">‹</button>
+            <button class="pg-btn active">1</button>
+            <button class="pg-btn">2</button>
+            <button class="pg-btn">3</button>
+            <button class="pg-btn">4</button>
+            <button class="pg-btn">›</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>
