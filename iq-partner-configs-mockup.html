@@ -250,9 +250,9 @@
 
   /* ---------- Action links in cells ---------- */
   .actions { display: flex; gap: 14px; }
-  .link { color: #1677ff; cursor: pointer; font-size: 14px; }
-  .link:hover { color: #4096ff; text-decoration: underline; }
-  .link-muted { color: var(--gray-500); }
+  .link { color: var(--groupon-green); cursor: pointer; font-size: 14px; font-weight: 500; }
+  .link:hover { color: #0a9928; text-decoration: underline; }
+  .link-muted { color: var(--gray-500); font-weight: 400; }
   .link-muted:hover { color: var(--gray-700); }
 
   /* ---------- Pagination (AntD style) ---------- */
@@ -394,11 +394,9 @@
           <table class="tbl">
             <thead>
               <tr>
-                <th style="width: 26%;">Name</th>
-                <th style="width: 14%;">Country / Currency</th>
-                <th style="width: 14%;">Environment</th>
-                <th style="width: 22%;">Status</th>
-                <th style="width: 24%;">Actions</th>
+                <th style="width: 60%;">Name</th>
+                <th style="width: 25%;">Country / Currency</th>
+                <th style="width: 15%;">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -408,124 +406,47 @@
                   <div class="partner-proto">voucher</div>
                 </td>
                 <td>US / USD</td>
-                <td>
-                  <div class="env-stack">
-                    <span class="env">preproduction</span>
-                    <span class="env">production</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="status-stack">
-                    <span class="tag tag-orange">Setup In Progress</span>
-                    <span class="tag">Setup Not Started</span>
-                  </div>
-                </td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+                <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-
               <tr>
                 <td>
                   <div class="partner-name">Redeam_ES</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
                 <td>ES / EUR</td>
-                <td>
-                  <div class="env-stack">
-                    <span class="env">preproduction</span>
-                    <span class="env">production</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="status-stack">
-                    <span class="tag tag-green">Certified</span>
-                    <span class="tag tag-blue">Ready</span>
-                  </div>
-                </td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
+                <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-
               <tr>
                 <td>
                   <div class="partner-name">octo_palisis_NL</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
                 <td>NL / EUR</td>
-                <td>
-                  <div class="env-stack">
-                    <span class="env">preproduction</span>
-                    <span class="env">production</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="status-stack">
-                    <span class="tag tag-green">Certified</span>
-                    <span class="tag tag-blue">Ready</span>
-                  </div>
-                </td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
+                <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-
               <tr>
                 <td>
                   <div class="partner-name">Bokun</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
                 <td>US / USD</td>
-                <td>
-                  <div class="env-stack">
-                    <span class="env">preproduction</span>
-                    <span class="env">production</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="status-stack">
-                    <span class="tag tag-orange">Setup In Progress</span>
-                    <span class="tag">Setup Not Started</span>
-                  </div>
-                </td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+                <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-
               <tr>
                 <td>
                   <div class="partner-name">TripToGo</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
                 <td>US / USD</td>
-                <td>
-                  <div class="env-stack">
-                    <span class="env">preproduction</span>
-                    <span class="env">production</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="status-stack">
-                    <span class="tag tag-green">Test Ready For Review</span>
-                    <span class="tag">Setup Not Started</span>
-                  </div>
-                </td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Review</a><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+                <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-
               <tr>
                 <td>
                   <div class="partner-name">mamenta</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
                 <td>US / USD</td>
-                <td>
-                  <div class="env-stack">
-                    <span class="env">preproduction</span>
-                    <span class="env">production</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="status-stack">
-                    <span class="tag tag-green">Certified</span>
-                    <span class="tag tag-blue">Ready</span>
-                  </div>
-                </td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
+                <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
             </tbody>
           </table>
