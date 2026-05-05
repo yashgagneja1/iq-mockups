@@ -172,12 +172,12 @@
     border: 1px solid #d9d9d9; font-size: 14px; font-weight: 400;
     cursor: pointer; transition: all .12s;
   }
-  .btn:hover { color: #4096ff; border-color: #4096ff; }
+  .btn:hover { color: var(--groupon-green); border-color: var(--groupon-green); }
   .btn-primary {
-    background: #1677ff; color: #fff; border-color: #1677ff;
-    box-shadow: 0 2px 0 rgba(5,145,255,0.1);
+    background: var(--groupon-green); color: #fff; border-color: var(--groupon-green);
+    box-shadow: 0 2px 0 rgba(0,124,31,0.15);
   }
-  .btn-primary:hover { background: #4096ff; color: #fff; border-color: #4096ff; }
+  .btn-primary:hover { background: #0a9928; color: #fff; border-color: #0a9928; }
   .btn svg {
     width: 14px; height: 14px; stroke: currentColor; fill: none;
     stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
@@ -192,7 +192,7 @@
     border: 1px solid #d9d9d9; background: #fff;
     color: rgba(0,0,0,0.88); font-size: 14px; outline: 0;
   }
-  .input:focus, .select:focus { border-color: #4096ff; }
+  .input:focus, .select:focus { border-color: var(--groupon-green); }
   .input { min-width: 280px; }
   .input::placeholder { color: rgba(0,0,0,0.25); }
   .select {
@@ -230,6 +230,10 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 12px; color: var(--gray-700);
     background: var(--gray-100); padding: 2px 8px; border-radius: 4px;
+    display: inline-block;
+  }
+  .env-stack, .status-stack {
+    display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
   }
 
   /* ---------- AntD Tag styles ---------- */
@@ -264,8 +268,8 @@
     display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer; font-size: 13px; color: rgba(0,0,0,0.88);
   }
-  .pg-btn:hover { color: #4096ff; border-color: #4096ff; }
-  .pg-btn.active { color: #1677ff; border-color: #1677ff; }
+  .pg-btn:hover { color: var(--groupon-green); border-color: var(--groupon-green); }
+  .pg-btn.active { color: var(--groupon-green); border-color: var(--groupon-green); }
 
   /* ---------- Annotation pin ---------- */
   .pin {
@@ -411,99 +415,129 @@
             </thead>
             <tbody>
               <tr>
-                <td rowspan="2">
+                <td>
                   <div class="partner-name">ReleafClinics</div>
                   <div class="partner-proto">voucher</div>
                 </td>
-                <td rowspan="2">US / USD</td>
-                <td><span class="env">preproduction</span></td>
-                <td><span class="tag tag-orange">Setup In Progress</span></td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
-              </tr>
-              <tr>
-                <td><span class="env">production</span></td>
-                <td><span class="tag">Setup Not Started</span></td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Setup</a></div></td>
+                <td>US / USD</td>
+                <td>
+                  <div class="env-stack">
+                    <span class="env">preproduction</span>
+                    <span class="env">production</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="status-stack">
+                    <span class="tag tag-orange">Setup In Progress</span>
+                    <span class="tag">Setup Not Started</span>
+                  </div>
+                </td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
               </tr>
 
               <tr>
-                <td rowspan="2">
+                <td>
                   <div class="partner-name">Redeam_ES</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
-                <td rowspan="2">ES / EUR</td>
-                <td><span class="env">preproduction</span></td>
-                <td><span class="tag tag-green">Certified</span></td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
-              </tr>
-              <tr>
-                <td><span class="env">production</span></td>
-                <td><span class="tag tag-blue">Ready</span></td>
+                <td>ES / EUR</td>
+                <td>
+                  <div class="env-stack">
+                    <span class="env">preproduction</span>
+                    <span class="env">production</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="status-stack">
+                    <span class="tag tag-green">Certified</span>
+                    <span class="tag tag-blue">Ready</span>
+                  </div>
+                </td>
                 <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
               </tr>
 
               <tr>
-                <td rowspan="2">
+                <td>
                   <div class="partner-name">octo_palisis_NL</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
-                <td rowspan="2">NL / EUR</td>
-                <td><span class="env">preproduction</span></td>
-                <td><span class="tag tag-green">Certified</span></td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
-              </tr>
-              <tr>
-                <td><span class="env">production</span></td>
-                <td><span class="tag tag-blue">Ready</span></td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+                <td>NL / EUR</td>
+                <td>
+                  <div class="env-stack">
+                    <span class="env">preproduction</span>
+                    <span class="env">production</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="status-stack">
+                    <span class="tag tag-green">Certified</span>
+                    <span class="tag tag-blue">Ready</span>
+                  </div>
+                </td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
               </tr>
 
               <tr>
-                <td rowspan="2">
+                <td>
                   <div class="partner-name">Bokun</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
-                <td rowspan="2">US / USD</td>
-                <td><span class="env">preproduction</span></td>
-                <td><span class="tag tag-orange">Setup In Progress</span></td>
+                <td>US / USD</td>
+                <td>
+                  <div class="env-stack">
+                    <span class="env">preproduction</span>
+                    <span class="env">production</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="status-stack">
+                    <span class="tag tag-orange">Setup In Progress</span>
+                    <span class="tag">Setup Not Started</span>
+                  </div>
+                </td>
                 <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
-              </tr>
-              <tr>
-                <td><span class="env">production</span></td>
-                <td><span class="tag">Setup Not Started</span></td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Setup</a></div></td>
               </tr>
 
               <tr>
-                <td rowspan="2">
+                <td>
                   <div class="partner-name">TripToGo</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
-                <td rowspan="2">US / USD</td>
-                <td><span class="env">preproduction</span></td>
-                <td><span class="tag tag-green">Test Ready For Review</span></td>
+                <td>US / USD</td>
+                <td>
+                  <div class="env-stack">
+                    <span class="env">preproduction</span>
+                    <span class="env">production</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="status-stack">
+                    <span class="tag tag-green">Test Ready For Review</span>
+                    <span class="tag">Setup Not Started</span>
+                  </div>
+                </td>
                 <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Review</a><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
-              </tr>
-              <tr>
-                <td><span class="env">production</span></td>
-                <td><span class="tag">Setup Not Started</span></td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Setup</a></div></td>
               </tr>
 
               <tr>
-                <td rowspan="2">
+                <td>
                   <div class="partner-name">mamenta</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
                 </td>
-                <td rowspan="2">US / USD</td>
-                <td><span class="env">preproduction</span></td>
-                <td><span class="tag tag-green">Certified</span></td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
-              </tr>
-              <tr>
-                <td><span class="env">production</span></td>
-                <td><span class="tag tag-blue">Ready</span></td>
-                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></div></td>
+                <td>US / USD</td>
+                <td>
+                  <div class="env-stack">
+                    <span class="env">preproduction</span>
+                    <span class="env">production</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="status-stack">
+                    <span class="tag tag-green">Certified</span>
+                    <span class="tag tag-blue">Ready</span>
+                  </div>
+                </td>
+                <td><div class="actions"><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a><a class="link link-muted" href="#">View logs</a></div></td>
               </tr>
             </tbody>
           </table>

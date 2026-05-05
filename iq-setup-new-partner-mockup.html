@@ -22,8 +22,9 @@
     --antd-text-3:  rgba(0,0,0,0.45);
     --antd-bd:      #d9d9d9;
     --antd-bd-soft: #f0f0f0;
-    --antd-blue:    #1677ff;
-    --antd-blue-hv: #4096ff;
+    --antd-blue:    #007C1F;
+    --antd-blue-hv: #0a9928;
+    --info-blue:    #1677ff;
   }
   *, *::before, *::after { box-sizing: border-box; }
   html, body {
@@ -171,7 +172,7 @@
   }
   .btn:hover { color: var(--antd-blue-hv); border-color: var(--antd-blue-hv); }
   .btn:disabled { color: rgba(0,0,0,0.25); background: rgba(0,0,0,0.04); border-color: var(--antd-bd); cursor: not-allowed; }
-  .btn-primary { background: var(--antd-blue); color: #fff; border-color: var(--antd-blue); box-shadow: 0 2px 0 rgba(5,145,255,0.1); }
+  .btn-primary { background: var(--antd-blue); color: #fff; border-color: var(--antd-blue); box-shadow: 0 2px 0 rgba(0,124,31,0.15); }
   .btn-primary:hover { background: var(--antd-blue-hv); color: #fff; border-color: var(--antd-blue-hv); }
   .btn-primary:disabled { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.25); border-color: var(--antd-bd); box-shadow: none; }
   .btn-text { background: transparent; border-color: transparent; color: var(--antd-text-2); }
@@ -183,7 +184,7 @@
     background: #e6f4ff; border: 1px solid #91caff;
     color: var(--antd-text); font-size: 13px;
   }
-  .alert .icn { color: var(--antd-blue); flex-shrink: 0; margin-top: 2px; }
+  .alert .icn { color: var(--info-blue); flex-shrink: 0; margin-top: 2px; }
   .alert .icn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 
   /* ===== AntD Card ===== */
@@ -261,7 +262,7 @@
   }
   .input:focus, .select:focus {
     border-color: var(--antd-blue);
-    box-shadow: 0 0 0 2px rgba(22,119,255,0.1);
+    box-shadow: 0 0 0 2px rgba(0,124,31,0.12);
   }
   .input::placeholder { color: rgba(0,0,0,0.25); }
   .select {

@@ -22,8 +22,9 @@
     --antd-text-3:  rgba(0,0,0,0.45);
     --antd-bd:      #d9d9d9;
     --antd-bd-soft: #f0f0f0;
-    --antd-blue:    #1677ff;
-    --antd-blue-hv: #4096ff;
+    --antd-blue:    #007C1F;
+    --antd-blue-hv: #0a9928;
+    --info-blue:    #1677ff;
 
     --tag-green-bg: #f6ffed; --tag-green-text: #389e0d; --tag-green-bd: #b7eb8f;
     --tag-blue-bg:  #e6f4ff; --tag-blue-text:  #1677ff; --tag-blue-bd:  #91caff;
@@ -138,7 +139,7 @@
     transition: all .12s;
   }
   .btn:hover { color: var(--antd-blue-hv); border-color: var(--antd-blue-hv); }
-  .btn-primary { background: var(--antd-blue); color: #fff; border-color: var(--antd-blue); box-shadow: 0 2px 0 rgba(5,145,255,0.1); }
+  .btn-primary { background: var(--antd-blue); color: #fff; border-color: var(--antd-blue); box-shadow: 0 2px 0 rgba(0,124,31,0.15); }
   .btn-primary:hover { background: var(--antd-blue-hv); color: #fff; border-color: var(--antd-blue-hv); }
   .btn-text { background: transparent; border-color: transparent; color: var(--antd-text-2); }
   .btn-text:hover { background: var(--gray-100); color: var(--gray-900); border-color: transparent; }
@@ -153,6 +154,32 @@
   .card-header h3 { margin: 0; font-size: 16px; font-weight: 600; color: var(--gray-900); }
   .card-header .meta { font-size: 13px; color: var(--antd-text-3); }
   .card-body { padding: 24px; }
+
+  /* ===== Tabs (AntD style) ===== */
+  .card-tabs {
+    display: flex; align-items: stretch;
+    border-bottom: 1px solid var(--antd-bd-soft);
+    padding: 0 16px;
+  }
+  .tab {
+    padding: 14px 16px; font-size: 14px; font-weight: 500;
+    color: var(--antd-text-2); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color .12s, border-color .12s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .tab:hover { color: var(--antd-blue); }
+  .tab.active { color: var(--antd-blue); border-bottom-color: var(--antd-blue); }
+  .tab-status {
+    font-size: 11px; font-weight: 500; line-height: 1.6;
+    padding: 1px 7px; border-radius: 4px; border: 1px solid;
+    text-transform: none; letter-spacing: 0;
+  }
+  .tab-status.green { background: var(--tag-green-bg); color: var(--tag-green-text); border-color: var(--tag-green-bd); }
+  .tab-status.gray { background: #fafafa; color: #595959; border-color: #d9d9d9; }
+  .tab-status.orange { background: #fff7e6; color: #d46b08; border-color: #ffd591; }
+  .tab-status.blue { background: var(--tag-blue-bg); color: var(--tag-blue-text); border-color: var(--tag-blue-bd); }
   .card-footer {
     border-top: 1px solid var(--antd-bd-soft);
     padding: 16px 24px;
@@ -210,7 +237,7 @@
     color: var(--antd-text); font-size: 14px; outline: 0;
     transition: border-color .12s, box-shadow .12s; width: 100%;
   }
-  .input:focus { border-color: var(--antd-blue); box-shadow: 0 0 0 2px rgba(22,119,255,0.1); }
+  .input:focus { border-color: var(--antd-blue); box-shadow: 0 0 0 2px rgba(0,124,31,0.12); }
   .input::placeholder { color: rgba(0,0,0,0.25); }
   .input.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
 
@@ -332,7 +359,7 @@
           <span class="sep">›</span>
           <a href="iq-partner-configs-mockup.html">Manage Configurations</a>
           <span class="sep">›</span>
-          <span class="current">ReleafClinics — Production</span>
+          <span class="current">ReleafClinics</span>
         </nav>
 
         <!-- PageHeader -->
@@ -340,11 +367,9 @@
           <div>
             <h1>
               <span class="partner">ReleafClinics</span>
-              <span class="env-tag">production</span>
             </h1>
             <p class="desc">
-              <span class="status-pill">Setup Not Started</span>
-              &nbsp;Complete the production environment setup. Identity fields above are read-only — connection details below are editable.
+              Manage configuration for both pre-production and production environments. Identity fields are shared and read-only; connection details are editable per environment.
             </p>
           </div>
           <div class="actions">
@@ -397,11 +422,17 @@
           </div>
         </div>
 
-        <!-- Editable form card -->
+        <!-- Editable form card with env tabs -->
         <div class="card">
-          <div class="card-header">
-            <h3>Connection details</h3>
-            <span class="meta">Production environment</span>
+          <div class="card-tabs">
+            <div class="tab">
+              <span>Pre-production</span>
+              <span class="tab-status orange">Setup In Progress</span>
+            </div>
+            <div class="tab active">
+              <span>Production</span>
+              <span class="tab-status gray">Setup Not Started</span>
+            </div>
           </div>
           <div class="card-body">
 
@@ -425,14 +456,6 @@
               </div>
 
               <div class="divider"></div>
-
-              <div class="field full">
-                <label>Is Mailmonger configuration required?</label>
-                <div class="radio-group">
-                  <label class="radio checked"><span class="dot"></span> No, not required</label>
-                  <label class="radio"><span class="dot"></span> Yes, please list domain name(s) below</label>
-                </div>
-              </div>
 
               <div class="field">
                 <label>Host URL for availability feed</label>
