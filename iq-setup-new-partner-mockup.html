@@ -199,6 +199,48 @@
   .step-content.active { display: block; }
   .test-conn-btn { width: fit-content; }
 
+  /* ===== Deals table (Step 3) ===== */
+  .deals-tbl {
+    width: 100%; border: 1px solid var(--antd-bd-soft); border-radius: 8px;
+    border-collapse: separate; border-spacing: 0; overflow: hidden;
+  }
+  .deals-tbl th, .deals-tbl td {
+    padding: 10px 14px; border-bottom: 1px solid var(--antd-bd-soft);
+    text-align: left; vertical-align: middle;
+  }
+  .deals-tbl thead th {
+    background: #fafafa; font-weight: 600; font-size: 12px;
+    color: var(--antd-text); text-transform: none;
+  }
+  .deals-tbl tbody tr:last-child td { border-bottom: none; }
+  .deals-tbl input.input, .deals-tbl select.select { margin: 0; }
+  .deals-tbl .link { color: var(--groupon-green); cursor: pointer; font-weight: 500; }
+  .deals-tbl .link:hover { text-decoration: underline; }
+
+  /* ===== Email chips ===== */
+  .email-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .email-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 28px; padding: 0 6px 0 12px; border-radius: 14px;
+    background: #f6ffed; border: 1px solid #b7eb8f; color: #389e0d;
+    font-size: 13px; font-weight: 500;
+  }
+  .email-chip-remove {
+    width: 18px; height: 18px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0.7; font-size: 14px; line-height: 1;
+    background: transparent; border: 0; color: inherit;
+  }
+  .email-chip-remove:hover { opacity: 1; background: #d9f7be; }
+
+  /* ===== Empty state ===== */
+  .empty-state {
+    padding: 14px 16px; text-align: center; color: var(--antd-text-3);
+    background: #fafafa; border: 1px dashed var(--antd-bd); border-radius: 6px;
+    font-size: 13px;
+  }
+  .empty-state.hidden { display: none; }
+
   /* ===== AntD Steps ===== */
   .steps { display: flex; align-items: flex-start; padding: 8px 0 16px; }
   .step {
@@ -593,85 +635,19 @@
             <!-- Step 2 content -->
             <div class="step-content step-2">
 
-              <div class="alert" style="margin-bottom: 24px;">
-                <span class="icn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
-                <span>Configure connection details for both environments. You can test endpoints before continuing.</span>
-              </div>
-
-              <div class="env-card">
-                <h3 class="form-section-title">Pre-production endpoints <span class="badge">preproduction</span></h3>
-                <p class="form-section-help">Pre-production credentials are used for certification testing.</p>
-
-                <div class="form-row one">
-                  <div class="field">
-                    <label><span class="req">*</span>Pre-production Client ID</label>
-                    <input class="input mono" placeholder="Enter pre-production client ID" />
-                    <span class="hint">Identifier the partner uses to authenticate inbound requests from Groupon.</span>
-                  </div>
-                </div>
-
-                <div class="form-row one">
-                  <div class="field">
-                    <label><span class="req">*</span>Host URL for transactional API requests / responses</label>
-                    <input class="input" placeholder="https://preprod.partner.com" />
-                  </div>
-                </div>
-
-                <div class="form-row one">
-                  <div class="field">
-                    <label>Host URL for availability feed</label>
-                    <input class="input" placeholder="https://preprod-feed.partner.com" />
-                    <span class="hint">Optional. Endpoint that exposes the partner's bulk availability feed for ingestion.</span>
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="field">
-                    <label>Checkout Timer Duration</label>
-                    <input class="input" placeholder="Enter duration in minutes" />
-                  </div>
-                  <div class="field">
-                    <label style="visibility: hidden;">_</label>
-                    <button class="btn test-conn-btn">Test connection</button>
-                  </div>
+              <div class="form-row one">
+                <div class="field">
+                  <label><span class="req">*</span>Host URL for transactional API requests / responses</label>
+                  <input class="input" placeholder="https://groupondev.yoururl.com" />
+                  <span class="hint">Base URL Groupon will call for reservation, fulfillment, and refund operations.</span>
                 </div>
               </div>
 
-              <div class="env-card">
-                <h3 class="form-section-title">Production endpoints <span class="badge prod">production</span></h3>
-                <p class="form-section-help">Production endpoints will go live once both environments are Ready.</p>
-
-                <div class="form-row one">
-                  <div class="field">
-                    <label><span class="req">*</span>Production Client ID</label>
-                    <input class="input mono" placeholder="Enter production client ID" />
-                    <span class="hint">Identifier the partner uses to authenticate inbound requests from Groupon.</span>
-                  </div>
-                </div>
-
-                <div class="form-row one">
-                  <div class="field">
-                    <label><span class="req">*</span>Host URL for transactional API requests / responses</label>
-                    <input class="input" placeholder="https://prod.partner.com" />
-                  </div>
-                </div>
-
-                <div class="form-row one">
-                  <div class="field">
-                    <label>Host URL for availability feed</label>
-                    <input class="input" placeholder="https://prod-feed.partner.com" />
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="field">
-                    <label>Checkout Timer Duration</label>
-                    <input class="input" placeholder="Enter duration in minutes" />
-                  </div>
-                  <div class="field">
-                    <label style="visibility: hidden;">_</label>
-                    <button class="btn test-conn-btn">Test connection</button>
-                  </div>
+              <div class="form-row one">
+                <div class="field">
+                  <label><span class="req">*</span>Host URL for availability feed</label>
+                  <input class="input" placeholder="https://partner.availabilityfeed.com" />
+                  <span class="hint">Endpoint that exposes the partner's bulk availability feed for ingestion.</span>
                 </div>
               </div>
 
@@ -683,54 +659,59 @@
 
               <div class="alert" style="margin-bottom: 24px;">
                 <span class="icn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
-                <span>Configure how this partner's deals sync into Groupon. These settings can be changed later.</span>
+                <span>
+                  <b>Note:</b>
+                  <ul style="margin: 4px 0 0; padding-left: 20px;">
+                    <li>You must click <b>Confirm Completion</b> below to complete deal addition/deletion.</li>
+                    <li>Currently we allow a maximum of <b>5 test deals</b>.</li>
+                  </ul>
+                </span>
               </div>
 
-              <h3 class="form-section-title">Sync mode</h3>
-              <p class="form-section-help">How should deals be imported from this partner?</p>
-              <div class="radio-group" style="margin-bottom: 24px;">
-                <label class="radio checked"><span class="dot"></span> Auto-import all deals from the selected taxonomy</label>
-                <label class="radio"><span class="dot"></span> Pick deals manually from the taxonomy after setup</label>
-                <label class="radio"><span class="dot"></span> Webhook-driven (partner pushes new deals to Groupon)</label>
-              </div>
+              <table class="deals-tbl">
+                <thead>
+                  <tr>
+                    <th>Test Deals</th>
+                    <th style="width: 200px;">Locale</th>
+                    <th style="width: 100px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dealsTbody">
+                  <tr>
+                    <td><input class="input mono" placeholder="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx" /></td>
+                    <td>
+                      <select class="select">
+                        <option value="en_US">en_US</option>
+                        <option value="en_GB">en_GB</option>
+                        <option value="es_ES">es_ES</option>
+                        <option value="nl_NL">nl_NL</option>
+                        <option value="de_DE">de_DE</option>
+                        <option value="fr_FR">fr_FR</option>
+                        <option value="it_IT">it_IT</option>
+                      </select>
+                    </td>
+                    <td><a class="link remove-deal" href="#">Remove</a></td>
+                  </tr>
+                </tbody>
+              </table>
+              <button id="addDealBtn" class="btn" style="margin-top: 12px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Another UUID
+              </button>
 
               <div class="divider"></div>
 
-              <h3 class="form-section-title">Sync schedule</h3>
-              <p class="form-section-help">How often should we refresh deal availability and pricing?</p>
-              <div class="radio-group" style="margin-bottom: 24px;">
-                <label class="radio checked"><span class="dot"></span> Real-time (webhook callbacks)</label>
-                <label class="radio"><span class="dot"></span> Every 15 minutes</label>
-                <label class="radio"><span class="dot"></span> Daily at 02:00 UTC</label>
-                <label class="radio"><span class="dot"></span> Manual only</label>
-              </div>
-
-              <div class="divider"></div>
-
-              <h3 class="form-section-title">Distribution divisions</h3>
-              <p class="form-section-help">Which Groupon divisions will list this partner's deals?</p>
-              <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; max-width: 520px;">
-                <label class="checkbox checked"><span class="box"></span> US — North America</label>
-                <label class="checkbox checked"><span class="box"></span> UK — Europe</label>
-                <label class="checkbox"><span class="box"></span> DE — Europe</label>
-                <label class="checkbox"><span class="box"></span> FR — Europe</label>
-                <label class="checkbox"><span class="box"></span> AU — Asia Pacific</label>
-              </div>
-
-              <div class="divider"></div>
-
-              <h3 class="form-section-title">Failure notifications</h3>
-              <p class="form-section-help">When sync fails or partners' endpoints return errors, who should be notified?</p>
-              <div class="form-row one">
-                <div class="field">
-                  <label>Slack channel</label>
-                  <input class="input" placeholder="#partner-integrations" />
+              <h3 class="form-section-title">User Emails for accessing Groupon Simulator</h3>
+              <div id="emailChips" class="email-chips" style="margin-bottom: 12px;"></div>
+              <div id="emailEmpty" class="empty-state">No users are currently added</div>
+              <div class="form-row" style="margin-top: 12px; align-items: end;">
+                <div class="field" style="margin-bottom: 0;">
+                  <label>Add user email</label>
+                  <input id="emailInput" class="input" placeholder="user@groupon.com" />
                 </div>
-              </div>
-              <div class="form-row one">
-                <div class="field">
-                  <label>Email distribution list</label>
-                  <input class="input" placeholder="partner-oncall@groupon.com" />
+                <div class="field" style="margin-bottom: 0;">
+                  <label style="visibility: hidden;">_</label>
+                  <button id="saveEmailsBtn" class="btn" style="width: fit-content;">Save Emails</button>
                 </div>
               </div>
 
@@ -798,7 +779,7 @@
   const continueLabels = {
     1: 'Submit & continue',
     2: 'Continue',
-    3: 'Finish setup',
+    3: 'Confirm Completion',
   };
 
   function showStep(n) {
@@ -853,25 +834,121 @@
     });
   }
 
-  // Test connection buttons (Step 2)
-  document.querySelectorAll('.test-conn-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const original = btn.textContent;
-      btn.textContent = 'Testing…';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.textContent = '✓ 200 OK · 142 ms';
-        btn.style.color = 'var(--groupon-green)';
-        btn.style.borderColor = 'var(--groupon-green)';
-        setTimeout(() => {
-          btn.textContent = original;
-          btn.disabled = false;
-          btn.style.color = '';
-          btn.style.borderColor = '';
-        }, 2500);
-      }, 700);
+  // ===== Step 3: Test Deals table (max 5 rows) =====
+  const MAX_DEALS = 5;
+  const dealsTbody = document.getElementById('dealsTbody');
+  const addDealBtn = document.getElementById('addDealBtn');
+
+  function buildDealRow() {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><input class="input mono" placeholder="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx" /></td>' +
+      '<td><select class="select">' +
+        '<option value="en_US">en_US</option>' +
+        '<option value="en_GB">en_GB</option>' +
+        '<option value="es_ES">es_ES</option>' +
+        '<option value="nl_NL">nl_NL</option>' +
+        '<option value="de_DE">de_DE</option>' +
+        '<option value="fr_FR">fr_FR</option>' +
+        '<option value="it_IT">it_IT</option>' +
+      '</select></td>' +
+      '<td><a class="link remove-deal" href="#">Remove</a></td>';
+    return tr;
+  }
+
+  function refreshAddBtn() {
+    if (!dealsTbody || !addDealBtn) return;
+    const count = dealsTbody.querySelectorAll('tr').length;
+    addDealBtn.disabled = count >= MAX_DEALS;
+    addDealBtn.style.opacity = count >= MAX_DEALS ? '0.5' : '';
+    addDealBtn.style.cursor = count >= MAX_DEALS ? 'not-allowed' : 'pointer';
+    addDealBtn.title = count >= MAX_DEALS ? 'Maximum 5 test deals reached' : '';
+  }
+
+  if (addDealBtn) {
+    addDealBtn.addEventListener('click', () => {
+      const count = dealsTbody.querySelectorAll('tr').length;
+      if (count >= MAX_DEALS) return;
+      dealsTbody.appendChild(buildDealRow());
+      refreshAddBtn();
     });
-  });
+  }
+
+  if (dealsTbody) {
+    dealsTbody.addEventListener('click', (e) => {
+      const link = e.target.closest('.remove-deal');
+      if (!link) return;
+      e.preventDefault();
+      const row = link.closest('tr');
+      if (!row) return;
+      const remaining = dealsTbody.querySelectorAll('tr').length;
+      if (remaining <= 1) {
+        // Don't remove the last row, just clear it
+        row.querySelector('input').value = '';
+        row.querySelector('select').selectedIndex = 0;
+      } else {
+        row.remove();
+      }
+      refreshAddBtn();
+    });
+    refreshAddBtn();
+  }
+
+  // ===== Step 3: User Emails =====
+  const emailInput = document.getElementById('emailInput');
+  const saveEmailsBtn = document.getElementById('saveEmailsBtn');
+  const emailChips = document.getElementById('emailChips');
+  const emailEmpty = document.getElementById('emailEmpty');
+  const emails = new Set();
+
+  function renderEmails() {
+    if (!emailChips) return;
+    emailChips.innerHTML = '';
+    emails.forEach(email => {
+      const chip = document.createElement('span');
+      chip.className = 'email-chip';
+      chip.innerHTML = '<span>' + email.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) + '</span>' +
+        '<button class="email-chip-remove" data-email="' + email + '" title="Remove">×</button>';
+      emailChips.appendChild(chip);
+    });
+    if (emailEmpty) emailEmpty.classList.toggle('hidden', emails.size > 0);
+  }
+
+  function addEmail(value) {
+    const trimmed = (value || '').trim();
+    if (!trimmed) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    emails.add(trimmed);
+    renderEmails();
+  }
+
+  if (saveEmailsBtn) {
+    saveEmailsBtn.addEventListener('click', () => {
+      addEmail(emailInput.value);
+      emailInput.value = '';
+    });
+  }
+  if (emailInput) {
+    emailInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addEmail(emailInput.value);
+        emailInput.value = '';
+      }
+    });
+  }
+  if (emailChips) {
+    emailChips.addEventListener('click', e => {
+      const btn = e.target.closest('.email-chip-remove');
+      if (!btn) return;
+      emails.delete(btn.dataset.email);
+      renderEmails();
+    });
+  }
+  renderEmails();
 })();
 </script>
 
