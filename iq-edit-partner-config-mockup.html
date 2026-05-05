@@ -225,6 +225,10 @@
     font-size: 12px; color: var(--antd-blue); cursor: pointer;
   }
   .descriptions-value .copy-btn:hover { color: var(--antd-blue-hv); border-color: var(--antd-blue-hv); }
+  .descriptions-value .copy-btn.icon-btn-sq {
+    width: 28px; padding: 0; display: inline-flex;
+    align-items: center; justify-content: center;
+  }
   .descriptions-value .ext-link {
     color: var(--antd-blue); display: inline-flex; align-items: center; gap: 4px;
   }
@@ -419,7 +423,9 @@
                 <div class="descriptions-label">Secret Key</div>
                 <div class="descriptions-value">
                   <span id="secretKeyValue" class="mono">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</span>
-                  <button id="toggleSecretBtn" class="copy-btn">Show</button>
+                  <button id="toggleSecretBtn" class="copy-btn icon-btn-sq" title="Show">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
                   <button class="copy-btn">Copy</button>
                 </div>
               </div>
@@ -531,12 +537,26 @@
   const setVal  = (id, val) => { const el = document.getElementById(id); if (el) el.value      = val; };
   const setPh   = (id, val) => { const el = document.getElementById(id); if (el) el.placeholder= val; };
 
+  const EYE_ICON =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/>' +
+    '<circle cx="12" cy="12" r="3"/></svg>';
+  const EYE_OFF_ICON =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-8-10-8a18.45 18.45 0 0 1 5.06-5.94"/>' +
+    '<path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.16 3.19"/>' +
+    '<path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>' +
+    '<line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
   function renderSecret() {
     const el  = document.getElementById('secretKeyValue');
     const btn = document.getElementById('toggleSecretBtn');
     if (!el || !btn) return;
-    el.textContent  = secretShown ? envData[currentEnv].secretKey : SECRET_MASK;
-    btn.textContent = secretShown ? 'Hide' : 'Show';
+    el.textContent = secretShown ? envData[currentEnv].secretKey : SECRET_MASK;
+    btn.innerHTML  = secretShown ? EYE_OFF_ICON : EYE_ICON;
+    btn.title      = secretShown ? 'Hide' : 'Show';
   }
 
   function applyEnv(envKey) {
