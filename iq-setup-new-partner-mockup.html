@@ -700,34 +700,72 @@
               <div id="step2Custom" style="display: none;">
                 <div class="alert" style="margin-bottom: 16px;">
                   <span class="icn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
-                  <span>You selected <b>CUSTOM</b> integration. Add each partner endpoint as a name + URL pair below.</span>
+                  <span>You selected <b>CUSTOM</b> integration. Configure transactional and ingestion endpoints below — add a row for each named endpoint the partner exposes.</span>
                 </div>
 
-                <table class="kv-tbl">
-                  <thead>
-                    <tr>
-                      <th style="width: 30%;">Endpoint Name</th>
-                      <th>Endpoint URL</th>
-                      <th style="width: 100px;">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="endpointsTbody">
-                    <tr>
-                      <td><input class="input" placeholder="reservation" /></td>
-                      <td><input class="input" placeholder="https://partner.com/api/reservation" /></td>
-                      <td><a class="link remove-endpoint" href="#">Remove</a></td>
-                    </tr>
-                    <tr>
-                      <td><input class="input" placeholder="fulfillment" /></td>
-                      <td><input class="input" placeholder="https://partner.com/api/fulfillment" /></td>
-                      <td><a class="link remove-endpoint" href="#">Remove</a></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button id="addEndpointBtn" class="btn" style="margin-top: 12px;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  Add Another Endpoint
-                </button>
+                <!-- Transactional endpoints block -->
+                <div class="env-card">
+                  <h3 class="form-section-title">Transactional endpoints</h3>
+                  <p class="form-section-help">Endpoints Groupon will call for reservation, fulfillment, and refund operations.</p>
+
+                  <table class="kv-tbl endpoints-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 30%;">Endpoint Name</th>
+                        <th>Endpoint URL</th>
+                        <th style="width: 100px;">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><input class="input" placeholder="reservation" /></td>
+                        <td><input class="input" placeholder="https://partner.com/api/reservation" /></td>
+                        <td><a class="link remove-endpoint" href="#">Remove</a></td>
+                      </tr>
+                      <tr>
+                        <td><input class="input" placeholder="fulfillment" /></td>
+                        <td><input class="input" placeholder="https://partner.com/api/fulfillment" /></td>
+                        <td><a class="link remove-endpoint" href="#">Remove</a></td>
+                      </tr>
+                      <tr>
+                        <td><input class="input" placeholder="refund" /></td>
+                        <td><input class="input" placeholder="https://partner.com/api/refund" /></td>
+                        <td><a class="link remove-endpoint" href="#">Remove</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <button class="btn add-endpoint-btn" style="margin-top: 12px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Add Another Endpoint
+                  </button>
+                </div>
+
+                <!-- Ingestion endpoints block -->
+                <div class="env-card">
+                  <h3 class="form-section-title">Ingestion endpoints</h3>
+                  <p class="form-section-help">Endpoints that expose the partner's bulk data feeds — deals, availability, pricing, etc.</p>
+
+                  <table class="kv-tbl endpoints-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 30%;">Endpoint Name</th>
+                        <th>Endpoint URL</th>
+                        <th style="width: 100px;">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><input class="input" placeholder="availability_feed" /></td>
+                        <td><input class="input" placeholder="https://partner.com/feed/availability" /></td>
+                        <td><a class="link remove-endpoint" href="#">Remove</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <button class="btn add-endpoint-btn" style="margin-top: 12px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Add Another Endpoint
+                  </button>
+                </div>
               </div>
 
             </div>
@@ -868,10 +906,8 @@
     applyStep2Mode(); // initial state
   }
 
-  // Add / Remove custom endpoint rows
-  const endpointsTbody = document.getElementById('endpointsTbody');
-  const addEndpointBtn = document.getElementById('addEndpointBtn');
-
+  // Add / Remove custom endpoint rows — works for any number of
+  // .endpoints-table tables (Transactional, Ingestion, future ones).
   function buildEndpointRow() {
     const tr = document.createElement('tr');
     tr.innerHTML =
@@ -881,20 +917,26 @@
     return tr;
   }
 
-  if (addEndpointBtn && endpointsTbody) {
-    addEndpointBtn.addEventListener('click', () => {
-      endpointsTbody.appendChild(buildEndpointRow());
+  // Each "Add Another Endpoint" button only adds a row to its OWN table
+  // (the .endpoints-table that lives in the same .env-card).
+  document.querySelectorAll('.add-endpoint-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card  = btn.closest('.env-card');
+      const tbody = card && card.querySelector('table.endpoints-table tbody');
+      if (tbody) tbody.appendChild(buildEndpointRow());
     });
-  }
+  });
 
-  if (endpointsTbody) {
-    endpointsTbody.addEventListener('click', (e) => {
+  // Remove handler scoped to each table so rows in different blocks don't
+  // interfere with each other's "keep at least one row" rule.
+  document.querySelectorAll('table.endpoints-table tbody').forEach(tbody => {
+    tbody.addEventListener('click', e => {
       const link = e.target.closest('.remove-endpoint');
       if (!link) return;
       e.preventDefault();
       const row = link.closest('tr');
       if (!row) return;
-      const remaining = endpointsTbody.querySelectorAll('tr').length;
+      const remaining = tbody.querySelectorAll('tr').length;
       if (remaining <= 1) {
         // keep at least one row, just clear it
         row.querySelectorAll('input').forEach(i => i.value = '');
@@ -902,7 +944,7 @@
         row.remove();
       }
     });
-  }
+  });
 
   // Checkbox: toggle .checked
   document.querySelectorAll('.checkbox').forEach(cb => {
