@@ -385,33 +385,33 @@
         <div class="card">
           <div class="card-header">
             <h3>Partner identity</h3>
-            <span class="meta">Production environment · set during partner creation · cannot be changed</span>
+            <span id="identityMeta" class="meta">Production environment · set during partner creation · cannot be changed</span>
           </div>
           <div class="card-body">
             <div class="descriptions">
               <div class="descriptions-row">
                 <div class="descriptions-label">Taxonomy Name</div>
-                <div class="descriptions-value">Releaf Clinics — US</div>
+                <div id="taxonomyValue" class="descriptions-value">Cannabis Wellness — US</div>
               </div>
               <div class="descriptions-row">
                 <div class="descriptions-label">Acquisition Method ID</div>
                 <div class="descriptions-value">
-                  <span class="mono">00000000-0000-0000-0000-000000000000</span>
+                  <span id="acqMethodId" class="mono">00000000-0000-0000-0000-000000000000</span>
                   <button class="copy-btn">Copy</button>
                 </div>
               </div>
               <div class="descriptions-row">
                 <div class="descriptions-label">Configuration Name</div>
-                <div class="descriptions-value">releafclinics</div>
+                <div id="configName" class="descriptions-value">releafclinics</div>
               </div>
               <div class="descriptions-row">
                 <div class="descriptions-label">Partner Vertical</div>
                 <div class="descriptions-value">POS</div>
               </div>
               <div class="descriptions-row">
-                <div class="descriptions-label">Production Client ID</div>
+                <div id="clientIdRowLabel" class="descriptions-label">Production Client ID</div>
                 <div class="descriptions-value">
-                  <span class="dim">Requested on 2026-04-30.</span>
+                  <span id="clientIdRowDate" class="dim">Requested on 2026-04-30.</span>
                   <a class="ext-link" href="#">JIRA <svg viewBox="0 0 24 24"><path d="M14 3h7v7M10 14 21 3M21 14v7H3V3h7"/></svg></a>
                 </div>
               </div>
@@ -430,26 +430,26 @@
         <div class="card">
           <div class="card-header">
             <h3>Connection details</h3>
-            <span class="meta">Production environment</span>
+            <span id="connectionMeta" class="meta">Production environment</span>
           </div>
           <div class="card-body">
 
             <div class="form-section">
               <div class="field">
-                <label><span class="req">*</span>Production Client ID</label>
-                <input class="input mono" value="00000000000000000000000000000000" />
+                <label><span class="req">*</span><span id="clientIdFieldLabel">Production Client ID</span></label>
+                <input id="clientIdInput" class="input mono" value="00000000000000000000000000000000" />
                 <span class="hint">Identifier the partner uses to authenticate inbound requests from Groupon.</span>
               </div>
 
               <div class="field">
                 <label><span class="req">*</span>Host URL for transactional API requests / responses</label>
-                <input class="input" placeholder="https://groupondev.yoururl.com" />
+                <input id="hostUrlInput" class="input" placeholder="https://groupondev.yoururl.com" />
                 <span class="hint">Base URL Groupon will call for reservation, fulfillment, and refund operations.</span>
               </div>
 
               <div class="field">
                 <label>Checkout Timer Duration</label>
-                <input class="input" placeholder="Enter duration in minutes" />
+                <input id="checkoutTimerInput" class="input" placeholder="Enter duration in minutes" />
                 <span class="hint">If set, holds will expire after this many minutes when the buyer doesn't complete checkout.</span>
               </div>
 
@@ -457,7 +457,7 @@
 
               <div class="field">
                 <label>Host URL for availability feed</label>
-                <input class="input" placeholder="https://partner.availabilityfeed.com" />
+                <input id="hostUrlAvailInput" class="input" placeholder="https://partner.availabilityfeed.com" />
                 <span class="hint">Optional. Endpoint that exposes the partner's bulk availability feed for ingestion.</span>
               </div>
             </div>
@@ -468,10 +468,10 @@
           <div class="card-footer">
             <span class="left">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              Once confirmed, the production environment moves to <b>Ready</b>.
+              <span id="footerNote">Once confirmed, the production environment moves to <b>Ready</b>.</span>
             </span>
             <div class="right">
-              <button class="btn btn-text">Save as draft</button>
+              <button class="btn btn-text" onclick="alert('Draft saved.\nIn a real build, your in-progress connection details would be persisted.')">Save as draft</button>
               <button class="btn" onclick="location.href='iq-partner-configs-mockup.html'">Cancel</button>
               <button class="btn btn-primary" onclick="location.href='iq-partner-configs-mockup.html'">
                 Confirm completion
@@ -485,5 +485,72 @@
     </main>
   </div>
 </div>
+
+<script>
+(function () {
+  const envData = {
+    preprod: {
+      identityMeta:        'Pre-production environment · set during partner creation · cannot be changed',
+      taxonomy:            'Cannabis Wellness — US',
+      acqMethodId:         '8c1d4e91-3fa7-42b5-9d4c-7e1a3b9f2d80',
+      configName:          'releafclinics-preprod',
+      clientIdRowLabel:    'Pre-production Client ID',
+      clientIdRowDate:     'Requested on 2026-04-25.',
+      connectionMeta:      'Pre-production environment',
+      clientIdFieldLabel:  'Pre-production Client ID',
+      clientIdInputValue:  'a1b2c3d4e5f6789012345abcde678901',
+      hostUrlPlaceholder:  'https://preprod.releafclinics.com',
+      hostUrlAvailPlaceholder: 'https://preprod-feed.releafclinics.com',
+      footerNote:          'Once confirmed, the pre-production environment moves to <b>Certified</b>.',
+    },
+    prod: {
+      identityMeta:        'Production environment · set during partner creation · cannot be changed',
+      taxonomy:            'Cannabis Wellness — US',
+      acqMethodId:         '00000000-0000-0000-0000-000000000000',
+      configName:          'releafclinics',
+      clientIdRowLabel:    'Production Client ID',
+      clientIdRowDate:     'Requested on 2026-04-30.',
+      connectionMeta:      'Production environment',
+      clientIdFieldLabel:  'Production Client ID',
+      clientIdInputValue:  '00000000000000000000000000000000',
+      hostUrlPlaceholder:  'https://groupondev.yoururl.com',
+      hostUrlAvailPlaceholder: 'https://partner.availabilityfeed.com',
+      footerNote:          'Once confirmed, the production environment moves to <b>Ready</b>.',
+    },
+  };
+
+  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setHTML = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML  = val; };
+  const setVal  = (id, val) => { const el = document.getElementById(id); if (el) el.value      = val; };
+  const setPh   = (id, val) => { const el = document.getElementById(id); if (el) el.placeholder= val; };
+
+  function applyEnv(envKey) {
+    const d = envData[envKey];
+    setText('identityMeta',     d.identityMeta);
+    setText('taxonomyValue',    d.taxonomy);
+    setText('acqMethodId',      d.acqMethodId);
+    setText('configName',       d.configName);
+    setText('clientIdRowLabel', d.clientIdRowLabel);
+    setText('clientIdRowDate',  d.clientIdRowDate);
+    setText('connectionMeta',   d.connectionMeta);
+    setText('clientIdFieldLabel', d.clientIdFieldLabel);
+    setVal ('clientIdInput',    d.clientIdInputValue);
+    setPh  ('hostUrlInput',     d.hostUrlPlaceholder);
+    setPh  ('hostUrlAvailInput',d.hostUrlAvailPlaceholder);
+    setHTML('footerNote',       d.footerNote);
+  }
+
+  // Tab click: toggle active + apply env data
+  const tabs = Array.from(document.querySelectorAll('.env-tabs .tab'));
+  tabs.forEach((tab, idx) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      applyEnv(idx === 0 ? 'preprod' : 'prod');
+    });
+  });
+})();
+</script>
+
 </body>
 </html>

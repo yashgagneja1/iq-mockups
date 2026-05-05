@@ -456,7 +456,17 @@
               <div class="form-row one" style="margin-top: 12px;">
                 <div class="field">
                   <label><span class="req">*</span>Taxonomy Name</label>
-                  <select class="select placeholder"><option>Select taxonomy name</option></select>
+                  <select class="select placeholder">
+                    <option value="">Select taxonomy name</option>
+                    <option value="cannabis-wellness-us">Cannabis Wellness — US</option>
+                    <option value="theatre-shows-uk">Theatre &amp; Shows — UK</option>
+                    <option value="tours-activities-us">Tours &amp; Activities — US</option>
+                    <option value="tours-activities-emea">Tours &amp; Activities — EMEA</option>
+                    <option value="health-beauty-us">Health &amp; Beauty — US</option>
+                    <option value="restaurants-bars-us">Restaurants &amp; Bars — US</option>
+                    <option value="spa-treatments-us">Spa Treatments — US</option>
+                    <option value="adventure-outdoor-us">Adventure &amp; Outdoor — US</option>
+                  </select>
                   <span class="hint">Acquisition Method ID is derived automatically from the selected taxonomy.</span>
                 </div>
               </div>
@@ -470,7 +480,17 @@
               <div class="form-row one" style="margin-top: 12px;">
                 <div class="field">
                   <label><span class="req">*</span>Taxonomy Name</label>
-                  <select class="select placeholder"><option>Select taxonomy name</option></select>
+                  <select class="select placeholder">
+                    <option value="">Select taxonomy name</option>
+                    <option value="cannabis-wellness-us">Cannabis Wellness — US</option>
+                    <option value="theatre-shows-uk">Theatre &amp; Shows — UK</option>
+                    <option value="tours-activities-us">Tours &amp; Activities — US</option>
+                    <option value="tours-activities-emea">Tours &amp; Activities — EMEA</option>
+                    <option value="health-beauty-us">Health &amp; Beauty — US</option>
+                    <option value="restaurants-bars-us">Restaurants &amp; Bars — US</option>
+                    <option value="spa-treatments-us">Spa Treatments — US</option>
+                    <option value="adventure-outdoor-us">Adventure &amp; Outdoor — US</option>
+                  </select>
                   <span class="hint">Acquisition Method ID is derived automatically from the selected taxonomy.</span>
                 </div>
               </div>
@@ -493,15 +513,39 @@
             <div class="form-row three">
               <div class="field">
                 <label><span class="req">*</span>Partner Vertical</label>
-                <select class="select placeholder"><option>Select partner vertical</option></select>
+                <select class="select placeholder">
+                  <option value="">Select partner vertical</option>
+                  <option value="POS">POS (Point of Sale)</option>
+                  <option value="OTA">OTA (Online Travel Agency)</option>
+                  <option value="Marketplace">Marketplace</option>
+                  <option value="Direct">Direct integration</option>
+                  <option value="Reseller">Reseller</option>
+                  <option value="Wholesaler">Wholesaler</option>
+                </select>
               </div>
               <div class="field">
                 <label><span class="req">*</span>Partner Type</label>
-                <select class="select placeholder"><option>Select partner type</option></select>
+                <select class="select placeholder">
+                  <option value="">Select partner type</option>
+                  <option value="voucher">Voucher-based</option>
+                  <option value="reservation">Reservation-based</option>
+                  <option value="api-direct">API-direct</option>
+                  <option value="iframe">Iframe-embedded</option>
+                  <option value="affiliate">Affiliate link</option>
+                </select>
               </div>
               <div class="field">
                 <label><span class="req">*</span>Integration Type</label>
-                <select class="select placeholder"><option>Select integration type</option></select>
+                <select class="select placeholder">
+                  <option value="">Select integration type</option>
+                  <option value="rails_groupon_iframe">rails_groupon_iframe</option>
+                  <option value="voucher">voucher</option>
+                  <option value="octo_v2">octo_v2</option>
+                  <option value="bokun_api">bokun_api</option>
+                  <option value="viator_api">viator_api</option>
+                  <option value="redeam_redemption">redeam_redemption</option>
+                  <option value="ingresso_api">ingresso_api</option>
+                </select>
               </div>
             </div>
 
@@ -556,5 +600,51 @@
     </main>
   </div>
 </div>
+
+<script>
+(function () {
+  // Radio: clicking any .radio in a .radio-group sets it as the only checked one
+  document.querySelectorAll('.radio-group').forEach(group => {
+    group.addEventListener('click', e => {
+      const r = e.target.closest('.radio');
+      if (!r) return;
+      group.querySelectorAll('.radio').forEach(x => x.classList.remove('checked'));
+      r.classList.add('checked');
+    });
+  });
+
+  // Checkbox: toggle .checked
+  document.querySelectorAll('.checkbox').forEach(cb => {
+    cb.addEventListener('click', () => cb.classList.toggle('checked'));
+  });
+
+  // Selects: drop placeholder styling once a real value is chosen
+  document.querySelectorAll('select.select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      if (sel.value) sel.classList.remove('placeholder');
+      else sel.classList.add('placeholder');
+    });
+  });
+
+  // Submit button: simulate "next step" since steps 2 + 3 are not yet mocked
+  const submitBtn = Array.from(document.querySelectorAll('.btn-primary'))
+    .find(b => b.textContent.trim().startsWith('Submit'));
+  if (submitBtn) {
+    submitBtn.addEventListener('click', () => {
+      alert('Step 1 complete.\nStep 2 (Connect to Partner) is not yet mocked — in a real build, you would advance to the endpoint + auth setup screen.');
+    });
+  }
+
+  // Save as draft: simulate
+  const draftBtn = Array.from(document.querySelectorAll('.btn-text'))
+    .find(b => b.textContent.trim() === 'Save as draft');
+  if (draftBtn) {
+    draftBtn.addEventListener('click', () => {
+      alert('Draft saved.\nIn a real build, this would persist progress and let you resume from the Connections list.');
+    });
+  }
+})();
+</script>
+
 </body>
 </html>

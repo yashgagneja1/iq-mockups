@@ -381,12 +381,31 @@
 
         <!-- Toolbar -->
         <div class="toolbar">
-          <input class="input" placeholder="Search by partner name or protocol" />
-          <select class="select"><option>All countries</option></select>
-          <select class="select"><option>All statuses</option></select>
-          <select class="select"><option>All environments</option></select>
+          <input id="searchInput" class="input" placeholder="Search by partner name or protocol" />
+          <select id="countrySelect" class="select">
+            <option value="all">All countries</option>
+            <option value="US">US</option>
+            <option value="ES">ES</option>
+            <option value="NL">NL</option>
+            <option value="UK">UK</option>
+            <option value="DE">DE</option>
+            <option value="FR">FR</option>
+          </select>
+          <select id="statusSelect" class="select">
+            <option value="all">All statuses</option>
+            <option value="setup-not-started">Setup Not Started</option>
+            <option value="setup-in-progress">Setup In Progress</option>
+            <option value="test-ready-for-review">Test Ready For Review</option>
+            <option value="certified">Certified</option>
+            <option value="ready">Ready</option>
+          </select>
+          <select id="envSelect" class="select">
+            <option value="all">All environments</option>
+            <option value="preproduction">preproduction</option>
+            <option value="production">production</option>
+          </select>
           <span class="grow"></span>
-          <button class="btn">Export CSV</button>
+          <button class="btn" onclick="alert('CSV export — would download partners-' + new Date().toISOString().slice(0,10) + '.csv in real app')">Export CSV</button>
         </div>
 
         <!-- Table card -->
@@ -400,7 +419,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr data-country="US" data-statuses="setup-in-progress,setup-not-started" data-envs="preproduction,production">
                 <td>
                   <div class="partner-name">ReleafClinics</div>
                   <div class="partner-proto">voucher</div>
@@ -408,7 +427,7 @@
                 <td>US / USD</td>
                 <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-              <tr>
+              <tr data-country="ES" data-statuses="certified,ready" data-envs="preproduction,production">
                 <td>
                   <div class="partner-name">Redeam_ES</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
@@ -416,7 +435,7 @@
                 <td>ES / EUR</td>
                 <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-              <tr>
+              <tr data-country="NL" data-statuses="certified,ready" data-envs="preproduction,production">
                 <td>
                   <div class="partner-name">octo_palisis_NL</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
@@ -424,7 +443,7 @@
                 <td>NL / EUR</td>
                 <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-              <tr>
+              <tr data-country="US" data-statuses="setup-in-progress,setup-not-started" data-envs="preproduction,production">
                 <td>
                   <div class="partner-name">Bokun</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
@@ -432,7 +451,7 @@
                 <td>US / USD</td>
                 <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-              <tr>
+              <tr data-country="US" data-statuses="test-ready-for-review,setup-not-started" data-envs="preproduction,production">
                 <td>
                   <div class="partner-name">TripToGo</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
@@ -440,7 +459,7 @@
                 <td>US / USD</td>
                 <td><a class="link" href="iq-edit-partner-config-mockup.html">Edit</a></td>
               </tr>
-              <tr>
+              <tr data-country="US" data-statuses="certified,ready" data-envs="preproduction,production">
                 <td>
                   <div class="partner-name">mamenta</div>
                   <div class="partner-proto">rails_groupon_iframe</div>
@@ -451,7 +470,7 @@
             </tbody>
           </table>
           <div class="pager">
-            <span class="meta">1 – 6 of 24 partners</span>
+            <span id="pagerMeta" class="meta">1 – 6 of 24 partners</span>
             <button class="pg-btn">‹</button>
             <button class="pg-btn active">1</button>
             <button class="pg-btn">2</button>
@@ -465,5 +484,50 @@
     </main>
   </div>
 </div>
+
+<script>
+(function () {
+  const tbody = document.querySelector('table.tbl tbody');
+  if (!tbody) return;
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const totalCount = 24; // mock total
+
+  const searchInput  = document.getElementById('searchInput');
+  const countrySel   = document.getElementById('countrySelect');
+  const statusSel    = document.getElementById('statusSelect');
+  const envSel       = document.getElementById('envSelect');
+  const pagerMeta    = document.getElementById('pagerMeta');
+
+  function applyFilters() {
+    const q       = (searchInput.value || '').toLowerCase().trim();
+    const country = countrySel.value;
+    const status  = statusSel.value;
+    const env     = envSel.value;
+
+    let visible = 0;
+    rows.forEach(row => {
+      const name  = row.querySelector('.partner-name').textContent.toLowerCase();
+      const proto = row.querySelector('.partner-proto').textContent.toLowerCase();
+      const okSearch  = !q || name.includes(q) || proto.includes(q);
+      const okCountry = country === 'all' || row.dataset.country === country;
+      const okStatus  = status  === 'all' || row.dataset.statuses.split(',').includes(status);
+      const okEnv     = env     === 'all' || row.dataset.envs.split(',').includes(env);
+      const visibleHere = okSearch && okCountry && okStatus && okEnv;
+      row.style.display = visibleHere ? '' : 'none';
+      if (visibleHere) visible++;
+    });
+
+    if (pagerMeta) {
+      pagerMeta.textContent = visible === 0
+        ? 'No partners match your filters'
+        : `1 – ${visible} of ${totalCount} partners`;
+    }
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+  [countrySel, statusSel, envSel].forEach(s => s.addEventListener('change', applyFilters));
+})();
+</script>
+
 </body>
 </html>
