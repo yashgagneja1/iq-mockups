@@ -418,7 +418,8 @@
               <div class="descriptions-row">
                 <div class="descriptions-label">Secret Key</div>
                 <div class="descriptions-value">
-                  <span class="mono">••••••••••••••••••••••••••••••••••••••••••••••••••••••</span>
+                  <span id="secretKeyValue" class="mono">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</span>
+                  <button id="toggleSecretBtn" class="copy-btn">Show</button>
                   <button class="copy-btn">Copy</button>
                 </div>
               </div>
@@ -502,6 +503,7 @@
       hostUrlPlaceholder:  'https://preprod.releafclinics.com',
       hostUrlAvailPlaceholder: 'https://preprod-feed.releafclinics.com',
       footerNote:          'Once confirmed, the pre-production environment moves to <b>Certified</b>.',
+      secretKey:           'IkxBXLpV2vwXdKT1Oui0zJUHDQUw0op1LM6bKczXhyJf0NEqx6UOwrLtAPAW6JZ4kgHw3Z5Lv2RXPv2LF9jhLQ',
     },
     prod: {
       identityMeta:        'Production environment · set during partner creation · cannot be changed',
@@ -516,15 +518,30 @@
       hostUrlPlaceholder:  'https://groupondev.yoururl.com',
       hostUrlAvailPlaceholder: 'https://partner.availabilityfeed.com',
       footerNote:          'Once confirmed, the production environment moves to <b>Ready</b>.',
+      secretKey:           'kF8mP3qX9zR7tY4wL2nA6bD5jH1cV0sE8gT4mP7yQ2rW5kN3vX9zL6tD1jR4hG7aB2cE5pK8mY3qT6wF9zL2vN',
     },
   };
+
+  const SECRET_MASK = '•'.repeat(64);
+  let currentEnv  = 'prod';
+  let secretShown = false;
 
   const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
   const setHTML = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML  = val; };
   const setVal  = (id, val) => { const el = document.getElementById(id); if (el) el.value      = val; };
   const setPh   = (id, val) => { const el = document.getElementById(id); if (el) el.placeholder= val; };
 
+  function renderSecret() {
+    const el  = document.getElementById('secretKeyValue');
+    const btn = document.getElementById('toggleSecretBtn');
+    if (!el || !btn) return;
+    el.textContent  = secretShown ? envData[currentEnv].secretKey : SECRET_MASK;
+    btn.textContent = secretShown ? 'Hide' : 'Show';
+  }
+
   function applyEnv(envKey) {
+    currentEnv = envKey;
+    secretShown = false; // hide secret on env switch for safety
     const d = envData[envKey];
     setText('identityMeta',     d.identityMeta);
     setText('taxonomyValue',    d.taxonomy);
@@ -538,6 +555,7 @@
     setPh  ('hostUrlInput',     d.hostUrlPlaceholder);
     setPh  ('hostUrlAvailInput',d.hostUrlAvailPlaceholder);
     setHTML('footerNote',       d.footerNote);
+    renderSecret();
   }
 
   // Tab click: toggle active + apply env data
@@ -549,6 +567,18 @@
       applyEnv(idx === 0 ? 'preprod' : 'prod');
     });
   });
+
+  // Secret Key Show/Hide toggle
+  const toggleBtn = document.getElementById('toggleSecretBtn');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      secretShown = !secretShown;
+      renderSecret();
+    });
+  }
+
+  // Initial render: ensure mask is shown
+  renderSecret();
 })();
 </script>
 
