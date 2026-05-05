@@ -205,23 +205,26 @@
   #checkoutTimerField  { grid-column: 2; }
   #parentPartnerField  { grid-column: 3; }
 
-  /* ===== Deals table (Step 3) ===== */
-  .deals-tbl {
+  /* ===== Editable key-value table (used for endpoints and other lists) ===== */
+  .deals-tbl, .kv-tbl {
     width: 100%; border: 1px solid var(--antd-bd-soft); border-radius: 8px;
     border-collapse: separate; border-spacing: 0; overflow: hidden;
   }
-  .deals-tbl th, .deals-tbl td {
+  .deals-tbl th, .deals-tbl td,
+  .kv-tbl  th, .kv-tbl  td {
     padding: 10px 14px; border-bottom: 1px solid var(--antd-bd-soft);
     text-align: left; vertical-align: middle;
   }
-  .deals-tbl thead th {
+  .deals-tbl thead th, .kv-tbl thead th {
     background: #fafafa; font-weight: 600; font-size: 12px;
     color: var(--antd-text); text-transform: none;
   }
-  .deals-tbl tbody tr:last-child td { border-bottom: none; }
-  .deals-tbl input.input, .deals-tbl select.select { margin: 0; }
-  .deals-tbl .link { color: var(--groupon-green); cursor: pointer; font-weight: 500; }
-  .deals-tbl .link:hover { text-decoration: underline; }
+  .deals-tbl tbody tr:last-child td,
+  .kv-tbl  tbody tr:last-child td { border-bottom: none; }
+  .deals-tbl input.input, .deals-tbl select.select,
+  .kv-tbl  input.input, .kv-tbl  select.select { margin: 0; }
+  .deals-tbl .link, .kv-tbl .link { color: var(--groupon-green); cursor: pointer; font-weight: 500; }
+  .deals-tbl .link:hover, .kv-tbl .link:hover { text-decoration: underline; }
 
   /* ===== Email chips ===== */
   .email-chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -596,10 +599,11 @@
               </div>
               <div class="field">
                 <label><span class="req">*</span>Integration Type</label>
-                <select class="select placeholder">
+                <select id="integrationTypeSelect" class="select placeholder">
                   <option value="">Please select Integration Type</option>
                   <option value="GROUPON_CONNECT">GROUPON_CONNECT</option>
                   <option value="OCTO">OCTO</option>
+                  <option value="CUSTOM">CUSTOM</option>
                 </select>
               </div>
             </div>
@@ -673,20 +677,57 @@
             <!-- Step 2 content -->
             <div class="step-content step-2">
 
-              <div class="form-row one">
-                <div class="field">
-                  <label><span class="req">*</span>Host URL for transactional API requests / responses</label>
-                  <input class="input" placeholder="https://groupondev.yoururl.com" />
-                  <span class="hint">Base URL Groupon will call for reservation, fulfillment, and refund operations.</span>
+              <!-- Default mode: shown when Integration Type != CUSTOM -->
+              <div id="step2Default">
+                <div class="form-row one">
+                  <div class="field">
+                    <label><span class="req">*</span>Host URL for transactional API requests / responses</label>
+                    <input class="input" placeholder="https://groupondev.yoururl.com" />
+                    <span class="hint">Base URL Groupon will call for reservation, fulfillment, and refund operations.</span>
+                  </div>
+                </div>
+
+                <div class="form-row one">
+                  <div class="field">
+                    <label><span class="req">*</span>Host URL for availability feed</label>
+                    <input class="input" placeholder="https://partner.availabilityfeed.com" />
+                    <span class="hint">Endpoint that exposes the partner's bulk availability feed for ingestion.</span>
+                  </div>
                 </div>
               </div>
 
-              <div class="form-row one">
-                <div class="field">
-                  <label><span class="req">*</span>Host URL for availability feed</label>
-                  <input class="input" placeholder="https://partner.availabilityfeed.com" />
-                  <span class="hint">Endpoint that exposes the partner's bulk availability feed for ingestion.</span>
+              <!-- Custom mode: shown when Integration Type == CUSTOM -->
+              <div id="step2Custom" style="display: none;">
+                <div class="alert" style="margin-bottom: 16px;">
+                  <span class="icn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                  <span>You selected <b>CUSTOM</b> integration. Add each partner endpoint as a name + URL pair below.</span>
                 </div>
+
+                <table class="kv-tbl">
+                  <thead>
+                    <tr>
+                      <th style="width: 30%;">Endpoint Name</th>
+                      <th>Endpoint URL</th>
+                      <th style="width: 100px;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="endpointsTbody">
+                    <tr>
+                      <td><input class="input" placeholder="reservation" /></td>
+                      <td><input class="input" placeholder="https://partner.com/api/reservation" /></td>
+                      <td><a class="link remove-endpoint" href="#">Remove</a></td>
+                    </tr>
+                    <tr>
+                      <td><input class="input" placeholder="fulfillment" /></td>
+                      <td><input class="input" placeholder="https://partner.com/api/fulfillment" /></td>
+                      <td><a class="link remove-endpoint" href="#">Remove</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button id="addEndpointBtn" class="btn" style="margin-top: 12px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Another Endpoint
+                </button>
               </div>
 
             </div>
@@ -809,6 +850,59 @@
   populateCountries(getCheckedValue('regionRadios') || 'NA');
   if (timerField)  timerField.style.display  = getCheckedValue('timerRadios')  === 'yes' ? '' : 'none';
   if (parentField) parentField.style.display = getCheckedValue('secretRadios') === 'no'  ? '' : 'none';
+
+  // ===== Step 2 mode: default vs CUSTOM (driven by Integration Type) =====
+  const integrationSelect = document.getElementById('integrationTypeSelect');
+  const step2Default = document.getElementById('step2Default');
+  const step2Custom  = document.getElementById('step2Custom');
+
+  function applyStep2Mode() {
+    if (!integrationSelect || !step2Default || !step2Custom) return;
+    const isCustom = integrationSelect.value === 'CUSTOM';
+    step2Default.style.display = isCustom ? 'none' : '';
+    step2Custom.style.display  = isCustom ? '' : 'none';
+  }
+
+  if (integrationSelect) {
+    integrationSelect.addEventListener('change', applyStep2Mode);
+    applyStep2Mode(); // initial state
+  }
+
+  // Add / Remove custom endpoint rows
+  const endpointsTbody = document.getElementById('endpointsTbody');
+  const addEndpointBtn = document.getElementById('addEndpointBtn');
+
+  function buildEndpointRow() {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><input class="input" placeholder="endpoint name" /></td>' +
+      '<td><input class="input" placeholder="https://partner.com/api/..." /></td>' +
+      '<td><a class="link remove-endpoint" href="#">Remove</a></td>';
+    return tr;
+  }
+
+  if (addEndpointBtn && endpointsTbody) {
+    addEndpointBtn.addEventListener('click', () => {
+      endpointsTbody.appendChild(buildEndpointRow());
+    });
+  }
+
+  if (endpointsTbody) {
+    endpointsTbody.addEventListener('click', (e) => {
+      const link = e.target.closest('.remove-endpoint');
+      if (!link) return;
+      e.preventDefault();
+      const row = link.closest('tr');
+      if (!row) return;
+      const remaining = endpointsTbody.querySelectorAll('tr').length;
+      if (remaining <= 1) {
+        // keep at least one row, just clear it
+        row.querySelectorAll('input').forEach(i => i.value = '');
+      } else {
+        row.remove();
+      }
+    });
+  }
 
   // Checkbox: toggle .checked
   document.querySelectorAll('.checkbox').forEach(cb => {

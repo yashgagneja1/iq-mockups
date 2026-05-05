@@ -246,6 +246,28 @@
     min-width: 0;
   }
   .descriptions-value.secret-cell .copy-btn { margin-left: 0; }
+
+  /* ===== Email chips (User Emails section) ===== */
+  .email-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .email-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 28px; padding: 0 6px 0 12px; border-radius: 14px;
+    background: #f6ffed; border: 1px solid #b7eb8f; color: #389e0d;
+    font-size: 13px; font-weight: 500;
+  }
+  .email-chip-remove {
+    width: 18px; height: 18px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0.7; font-size: 14px; line-height: 1;
+    background: transparent; border: 0; color: inherit;
+  }
+  .email-chip-remove:hover { opacity: 1; background: #d9f7be; }
+  .empty-state {
+    padding: 14px 16px; text-align: center; color: var(--antd-text-3);
+    background: #fafafa; border: 1px dashed var(--antd-bd); border-radius: 6px;
+    font-size: 13px;
+  }
+  .empty-state.hidden { display: none; }
   .descriptions-value .ext-link {
     color: var(--antd-blue); display: inline-flex; align-items: center; gap: 4px;
   }
@@ -486,6 +508,25 @@
               </div>
             </div>
 
+            <div class="divider"></div>
+
+            <h3 class="form-section-title">User Emails for accessing Groupon Simulator</h3>
+            <p class="form-section-help">Add team members who need access to the Groupon Simulator for this environment.</p>
+
+            <div id="emailChips" class="email-chips" style="margin-bottom: 12px;"></div>
+            <div id="emailEmpty" class="empty-state">No users are currently added</div>
+
+            <div class="form-row" style="margin-top: 12px; align-items: end;">
+              <div class="field" style="margin-bottom: 0;">
+                <label>Add user email</label>
+                <input id="emailInput" class="input" placeholder="user@groupon.com" />
+              </div>
+              <div class="field" style="margin-bottom: 0;">
+                <label style="visibility: hidden;">_</label>
+                <button id="saveEmailsBtn" class="btn" style="width: fit-content;">Save Emails</button>
+              </div>
+            </div>
+
           </div>
 
           <!-- Footer / actions -->
@@ -527,6 +568,7 @@
       hostUrlAvailPlaceholder: 'https://preprod-feed.releafclinics.com',
       footerNote:          'Once confirmed, the pre-production environment moves to <b>Certified</b>.',
       secretKey:           'IkxBXLpV2vwXdKT1Oui0zJUHDQUw0op1LM6bKczXhyJf0NEqx6UOwrLtAPAW6JZ4kgHw3Z5Lv2RXPv2LF9jhLQ',
+      userEmails:          ['ygagneja@groupon.com'],
     },
     prod: {
       identityMeta:        'Production environment · set during partner creation · cannot be changed',
@@ -542,6 +584,7 @@
       hostUrlAvailPlaceholder: 'https://partner.availabilityfeed.com',
       footerNote:          'Once confirmed, the production environment moves to <b>Ready</b>.',
       secretKey:           'kF8mP3qX9zR7tY4wL2nA6bD5jH1cV0sE8gT4mP7yQ2rW5kN3vX9zL6tD1jR4hG7aB2cE5pK8mY3qT6wF9zL2vN',
+      userEmails:          [],
     },
   };
 
@@ -576,6 +619,23 @@
     btn.title      = secretShown ? 'Hide' : 'Show';
   }
 
+  function renderEmails() {
+    const chips = document.getElementById('emailChips');
+    const empty = document.getElementById('emailEmpty');
+    if (!chips || !empty) return;
+    const list = envData[currentEnv].userEmails || [];
+    chips.innerHTML = '';
+    list.forEach(email => {
+      const chip = document.createElement('span');
+      chip.className = 'email-chip';
+      const safe = email.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+      chip.innerHTML = '<span>' + safe + '</span>' +
+        '<button class="email-chip-remove" data-email="' + safe + '" title="Remove">×</button>';
+      chips.appendChild(chip);
+    });
+    empty.classList.toggle('hidden', list.length > 0);
+  }
+
   function applyEnv(envKey) {
     currentEnv = envKey;
     secretShown = false; // hide secret on env switch for safety
@@ -593,6 +653,7 @@
     setPh  ('hostUrlAvailInput',d.hostUrlAvailPlaceholder);
     setHTML('footerNote',       d.footerNote);
     renderSecret();
+    renderEmails();
   }
 
   // Tab click: toggle active + apply env data
@@ -614,8 +675,53 @@
     });
   }
 
-  // Initial render: ensure mask is shown
+  // ===== User Emails (per-env) =====
+  const emailInput   = document.getElementById('emailInput');
+  const saveEmailsBtn = document.getElementById('saveEmailsBtn');
+  const emailChips   = document.getElementById('emailChips');
+
+  function addEmailToCurrentEnv(value) {
+    const trimmed = (value || '').trim();
+    if (!trimmed) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    const list = envData[currentEnv].userEmails;
+    if (list.includes(trimmed)) return;
+    list.push(trimmed);
+    renderEmails();
+  }
+
+  if (saveEmailsBtn) {
+    saveEmailsBtn.addEventListener('click', () => {
+      addEmailToCurrentEnv(emailInput.value);
+      emailInput.value = '';
+    });
+  }
+  if (emailInput) {
+    emailInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addEmailToCurrentEnv(emailInput.value);
+        emailInput.value = '';
+      }
+    });
+  }
+  if (emailChips) {
+    emailChips.addEventListener('click', e => {
+      const btn = e.target.closest('.email-chip-remove');
+      if (!btn) return;
+      const list = envData[currentEnv].userEmails;
+      const idx  = list.indexOf(btn.dataset.email);
+      if (idx >= 0) list.splice(idx, 1);
+      renderEmails();
+    });
+  }
+
+  // Initial render: ensure mask is shown + emails populated for default env
   renderSecret();
+  renderEmails();
 })();
 </script>
 
