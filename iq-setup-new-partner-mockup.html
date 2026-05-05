@@ -194,6 +194,11 @@
   }
   .card-body { padding: 24px; }
 
+  /* ===== Multi-step content visibility ===== */
+  .step-content { display: none; }
+  .step-content.active { display: block; }
+  .test-conn-btn { width: fit-content; }
+
   /* ===== AntD Steps ===== */
   .steps { display: flex; align-items: flex-start; padding: 8px 0 16px; }
   .step {
@@ -417,7 +422,7 @@
 
             <!-- Steps -->
             <div class="steps">
-              <div class="step active">
+              <div id="stepInd1" class="step active">
                 <div class="num"><span>1</span></div>
                 <div class="body">
                   <div class="title">Add Partner</div>
@@ -425,7 +430,7 @@
                 </div>
                 <div class="tail"></div>
               </div>
-              <div class="step">
+              <div id="stepInd2" class="step">
                 <div class="num"><span>2</span></div>
                 <div class="body">
                   <div class="title">Connect to Partner</div>
@@ -433,7 +438,7 @@
                 </div>
                 <div class="tail"></div>
               </div>
-              <div class="step">
+              <div id="stepInd3" class="step">
                 <div class="num"><span>3</span></div>
                 <div class="body">
                   <div class="title">Connect Deals</div>
@@ -441,6 +446,9 @@
                 </div>
               </div>
             </div>
+
+            <!-- Step 1 content -->
+            <div class="step-content step-1 active">
 
             <!-- Info alert -->
             <div class="alert" style="margin-bottom: 24px;">
@@ -457,15 +465,19 @@
                 <div class="field">
                   <label><span class="req">*</span>Taxonomy Name</label>
                   <select class="select placeholder">
-                    <option value="">Select taxonomy name</option>
-                    <option value="cannabis-wellness-us">Cannabis Wellness — US</option>
-                    <option value="theatre-shows-uk">Theatre &amp; Shows — UK</option>
-                    <option value="tours-activities-us">Tours &amp; Activities — US</option>
-                    <option value="tours-activities-emea">Tours &amp; Activities — EMEA</option>
-                    <option value="health-beauty-us">Health &amp; Beauty — US</option>
-                    <option value="restaurants-bars-us">Restaurants &amp; Bars — US</option>
-                    <option value="spa-treatments-us">Spa Treatments — US</option>
-                    <option value="adventure-outdoor-us">Adventure &amp; Outdoor — US</option>
+                    <option value="">Select Taxonomy Name</option>
+                    <option value="3pip-ss-preprod-partner-134">3pip-ss-preprod-partner-134</option>
+                    <option value="3pip-ss-preprod-partner-136">3pip-ss-preprod-partner-136</option>
+                    <option value="3pip-ss-preprod-partner-161">3pip-ss-preprod-partner-161</option>
+                    <option value="3pip-ss-preprod-partner-162">3pip-ss-preprod-partner-162</option>
+                    <option value="3pip-ss-preprod-partner-163">3pip-ss-preprod-partner-163</option>
+                    <option value="3pip-ss-preprod-partner-164">3pip-ss-preprod-partner-164</option>
+                    <option value="3pip-ss-preprod-partner-165">3pip-ss-preprod-partner-165</option>
+                    <option value="3pip-ss-preprod-partner-166">3pip-ss-preprod-partner-166</option>
+                    <option value="3pip-ss-preprod-partner-167">3pip-ss-preprod-partner-167</option>
+                    <option value="3pip-ss-preprod-partner-168">3pip-ss-preprod-partner-168</option>
+                    <option value="3pip-ss-preprod-partner-169">3pip-ss-preprod-partner-169</option>
+                    <option value="3pip-ss-preprod-partner-170">3pip-ss-preprod-partner-170</option>
                   </select>
                   <span class="hint">Acquisition Method ID is derived automatically from the selected taxonomy.</span>
                 </div>
@@ -481,15 +493,19 @@
                 <div class="field">
                   <label><span class="req">*</span>Taxonomy Name</label>
                   <select class="select placeholder">
-                    <option value="">Select taxonomy name</option>
-                    <option value="cannabis-wellness-us">Cannabis Wellness — US</option>
-                    <option value="theatre-shows-uk">Theatre &amp; Shows — UK</option>
-                    <option value="tours-activities-us">Tours &amp; Activities — US</option>
-                    <option value="tours-activities-emea">Tours &amp; Activities — EMEA</option>
-                    <option value="health-beauty-us">Health &amp; Beauty — US</option>
-                    <option value="restaurants-bars-us">Restaurants &amp; Bars — US</option>
-                    <option value="spa-treatments-us">Spa Treatments — US</option>
-                    <option value="adventure-outdoor-us">Adventure &amp; Outdoor — US</option>
+                    <option value="">Select Taxonomy Name</option>
+                    <option value="3pip-ss-prod-partner-134">3pip-ss-prod-partner-134</option>
+                    <option value="3pip-ss-prod-partner-136">3pip-ss-prod-partner-136</option>
+                    <option value="3pip-ss-prod-partner-161">3pip-ss-prod-partner-161</option>
+                    <option value="3pip-ss-prod-partner-162">3pip-ss-prod-partner-162</option>
+                    <option value="3pip-ss-prod-partner-163">3pip-ss-prod-partner-163</option>
+                    <option value="3pip-ss-prod-partner-164">3pip-ss-prod-partner-164</option>
+                    <option value="3pip-ss-prod-partner-165">3pip-ss-prod-partner-165</option>
+                    <option value="3pip-ss-prod-partner-166">3pip-ss-prod-partner-166</option>
+                    <option value="3pip-ss-prod-partner-167">3pip-ss-prod-partner-167</option>
+                    <option value="3pip-ss-prod-partner-168">3pip-ss-prod-partner-168</option>
+                    <option value="3pip-ss-prod-partner-169">3pip-ss-prod-partner-169</option>
+                    <option value="3pip-ss-prod-partner-170">3pip-ss-prod-partner-170</option>
                   </select>
                   <span class="hint">Acquisition Method ID is derived automatically from the selected taxonomy.</span>
                 </div>
@@ -514,37 +530,28 @@
               <div class="field">
                 <label><span class="req">*</span>Partner Vertical</label>
                 <select class="select placeholder">
-                  <option value="">Select partner vertical</option>
-                  <option value="POS">POS (Point of Sale)</option>
-                  <option value="OTA">OTA (Online Travel Agency)</option>
-                  <option value="Marketplace">Marketplace</option>
-                  <option value="Direct">Direct integration</option>
-                  <option value="Reseller">Reseller</option>
-                  <option value="Wholesaler">Wholesaler</option>
+                  <option value="">Please select Partner Vertical</option>
+                  <option value="HBW">HBW</option>
+                  <option value="TTD">TTD</option>
+                  <option value="POS">POS</option>
                 </select>
               </div>
               <div class="field">
                 <label><span class="req">*</span>Partner Type</label>
                 <select class="select placeholder">
-                  <option value="">Select partner type</option>
-                  <option value="voucher">Voucher-based</option>
-                  <option value="reservation">Reservation-based</option>
-                  <option value="api-direct">API-direct</option>
-                  <option value="iframe">Iframe-embedded</option>
-                  <option value="affiliate">Affiliate link</option>
+                  <option value="">Please select Partner Type</option>
+                  <option value="INGESTION">INGESTION</option>
+                  <option value="RAILS_PARTNER_IFRAME">RAILS_PARTNER_IFRAME</option>
+                  <option value="RAILS_GROUPON_IFRAME">RAILS_GROUPON_IFRAME</option>
+                  <option value="VOUCHER">VOUCHER</option>
                 </select>
               </div>
               <div class="field">
                 <label><span class="req">*</span>Integration Type</label>
                 <select class="select placeholder">
-                  <option value="">Select integration type</option>
-                  <option value="rails_groupon_iframe">rails_groupon_iframe</option>
-                  <option value="voucher">voucher</option>
-                  <option value="octo_v2">octo_v2</option>
-                  <option value="bokun_api">bokun_api</option>
-                  <option value="viator_api">viator_api</option>
-                  <option value="redeam_redemption">redeam_redemption</option>
-                  <option value="ingresso_api">ingresso_api</option>
+                  <option value="">Please select Integration Type</option>
+                  <option value="GROUPON_CONNECT">GROUPON_CONNECT</option>
+                  <option value="OCTO">OCTO</option>
                 </select>
               </div>
             </div>
@@ -580,16 +587,170 @@
               <span>I confirm that all fields above are correct and understand they <b>cannot be changed in the future</b>.</span>
             </label>
 
+            </div>
+            <!-- /step-1 -->
+
+            <!-- Step 2 content -->
+            <div class="step-content step-2">
+
+              <div class="alert" style="margin-bottom: 24px;">
+                <span class="icn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                <span>Configure connection details for both environments. You can test endpoints before continuing.</span>
+              </div>
+
+              <div class="env-card">
+                <h3 class="form-section-title">Pre-production endpoints <span class="badge">preproduction</span></h3>
+                <p class="form-section-help">Pre-production credentials are used for certification testing.</p>
+
+                <div class="form-row one">
+                  <div class="field">
+                    <label><span class="req">*</span>Pre-production Client ID</label>
+                    <input class="input mono" placeholder="Enter pre-production client ID" />
+                    <span class="hint">Identifier the partner uses to authenticate inbound requests from Groupon.</span>
+                  </div>
+                </div>
+
+                <div class="form-row one">
+                  <div class="field">
+                    <label><span class="req">*</span>Host URL for transactional API requests / responses</label>
+                    <input class="input" placeholder="https://preprod.partner.com" />
+                  </div>
+                </div>
+
+                <div class="form-row one">
+                  <div class="field">
+                    <label>Host URL for availability feed</label>
+                    <input class="input" placeholder="https://preprod-feed.partner.com" />
+                    <span class="hint">Optional. Endpoint that exposes the partner's bulk availability feed for ingestion.</span>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="field">
+                    <label>Checkout Timer Duration</label>
+                    <input class="input" placeholder="Enter duration in minutes" />
+                  </div>
+                  <div class="field">
+                    <label style="visibility: hidden;">_</label>
+                    <button class="btn test-conn-btn">Test connection</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="env-card">
+                <h3 class="form-section-title">Production endpoints <span class="badge prod">production</span></h3>
+                <p class="form-section-help">Production endpoints will go live once both environments are Ready.</p>
+
+                <div class="form-row one">
+                  <div class="field">
+                    <label><span class="req">*</span>Production Client ID</label>
+                    <input class="input mono" placeholder="Enter production client ID" />
+                    <span class="hint">Identifier the partner uses to authenticate inbound requests from Groupon.</span>
+                  </div>
+                </div>
+
+                <div class="form-row one">
+                  <div class="field">
+                    <label><span class="req">*</span>Host URL for transactional API requests / responses</label>
+                    <input class="input" placeholder="https://prod.partner.com" />
+                  </div>
+                </div>
+
+                <div class="form-row one">
+                  <div class="field">
+                    <label>Host URL for availability feed</label>
+                    <input class="input" placeholder="https://prod-feed.partner.com" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="field">
+                    <label>Checkout Timer Duration</label>
+                    <input class="input" placeholder="Enter duration in minutes" />
+                  </div>
+                  <div class="field">
+                    <label style="visibility: hidden;">_</label>
+                    <button class="btn test-conn-btn">Test connection</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!-- /step-2 -->
+
+            <!-- Step 3 content -->
+            <div class="step-content step-3">
+
+              <div class="alert" style="margin-bottom: 24px;">
+                <span class="icn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                <span>Configure how this partner's deals sync into Groupon. These settings can be changed later.</span>
+              </div>
+
+              <h3 class="form-section-title">Sync mode</h3>
+              <p class="form-section-help">How should deals be imported from this partner?</p>
+              <div class="radio-group" style="margin-bottom: 24px;">
+                <label class="radio checked"><span class="dot"></span> Auto-import all deals from the selected taxonomy</label>
+                <label class="radio"><span class="dot"></span> Pick deals manually from the taxonomy after setup</label>
+                <label class="radio"><span class="dot"></span> Webhook-driven (partner pushes new deals to Groupon)</label>
+              </div>
+
+              <div class="divider"></div>
+
+              <h3 class="form-section-title">Sync schedule</h3>
+              <p class="form-section-help">How often should we refresh deal availability and pricing?</p>
+              <div class="radio-group" style="margin-bottom: 24px;">
+                <label class="radio checked"><span class="dot"></span> Real-time (webhook callbacks)</label>
+                <label class="radio"><span class="dot"></span> Every 15 minutes</label>
+                <label class="radio"><span class="dot"></span> Daily at 02:00 UTC</label>
+                <label class="radio"><span class="dot"></span> Manual only</label>
+              </div>
+
+              <div class="divider"></div>
+
+              <h3 class="form-section-title">Distribution divisions</h3>
+              <p class="form-section-help">Which Groupon divisions will list this partner's deals?</p>
+              <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; max-width: 520px;">
+                <label class="checkbox checked"><span class="box"></span> US — North America</label>
+                <label class="checkbox checked"><span class="box"></span> UK — Europe</label>
+                <label class="checkbox"><span class="box"></span> DE — Europe</label>
+                <label class="checkbox"><span class="box"></span> FR — Europe</label>
+                <label class="checkbox"><span class="box"></span> AU — Asia Pacific</label>
+              </div>
+
+              <div class="divider"></div>
+
+              <h3 class="form-section-title">Failure notifications</h3>
+              <p class="form-section-help">When sync fails or partners' endpoints return errors, who should be notified?</p>
+              <div class="form-row one">
+                <div class="field">
+                  <label>Slack channel</label>
+                  <input class="input" placeholder="#partner-integrations" />
+                </div>
+              </div>
+              <div class="form-row one">
+                <div class="field">
+                  <label>Email distribution list</label>
+                  <input class="input" placeholder="partner-oncall@groupon.com" />
+                </div>
+              </div>
+
+            </div>
+            <!-- /step-3 -->
+
           </div>
 
           <!-- Card footer / actions -->
           <div class="card-footer">
-            <span class="left">Step 1 of 3 · Add Partner</span>
+            <span id="footerStepText" class="left">Step 1 of 3 · Add Partner</span>
             <div class="right">
               <button class="btn btn-text">Save as draft</button>
-              <button class="btn">Cancel</button>
-              <button class="btn btn-primary">
-                Submit &amp; continue
+              <button class="btn" onclick="location.href='iq-partner-configs-mockup.html'">Cancel</button>
+              <button id="backBtn" class="btn" style="display: none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Back
+              </button>
+              <button id="continueBtn" class="btn btn-primary">
+                <span id="continueLabel">Submit &amp; continue</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
             </div>
@@ -626,23 +787,91 @@
     });
   });
 
-  // Submit button: simulate "next step" since steps 2 + 3 are not yet mocked
-  const submitBtn = Array.from(document.querySelectorAll('.btn-primary'))
-    .find(b => b.textContent.trim().startsWith('Submit'));
-  if (submitBtn) {
-    submitBtn.addEventListener('click', () => {
-      alert('Step 1 complete.\nStep 2 (Connect to Partner) is not yet mocked — in a real build, you would advance to the endpoint + auth setup screen.');
+  // ===== Multi-step wizard navigation =====
+  let currentStep = 1;
+  const totalSteps = 3;
+  const stepLabels = {
+    1: 'Step 1 of 3 · Add Partner',
+    2: 'Step 2 of 3 · Connect to Partner',
+    3: 'Step 3 of 3 · Connect Deals',
+  };
+  const continueLabels = {
+    1: 'Submit & continue',
+    2: 'Continue',
+    3: 'Finish setup',
+  };
+
+  function showStep(n) {
+    document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+    const target = document.querySelector('.step-content.step-' + n);
+    if (target) target.classList.add('active');
+
+    for (let i = 1; i <= totalSteps; i++) {
+      const ind = document.getElementById('stepInd' + i);
+      if (!ind) continue;
+      ind.classList.remove('active', 'done');
+      if (i < n) ind.classList.add('done');
+      else if (i === n) ind.classList.add('active');
+    }
+
+    const footerText = document.getElementById('footerStepText');
+    if (footerText) footerText.textContent = stepLabels[n];
+    const continueLabel = document.getElementById('continueLabel');
+    if (continueLabel) continueLabel.textContent = continueLabels[n];
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) backBtn.style.display = n > 1 ? '' : 'none';
+
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  const continueBtn = document.getElementById('continueBtn');
+  if (continueBtn) {
+    continueBtn.addEventListener('click', () => {
+      if (currentStep < totalSteps) {
+        showStep(currentStep + 1);
+      } else {
+        alert('Partner setup complete!\nIn a real build, the partner would now appear in the Connections list with status "Setup In Progress" → "Certified" → "Ready" as configuration is verified.');
+        location.href = 'iq-partner-configs-mockup.html';
+      }
     });
   }
 
-  // Save as draft: simulate
+  const backBtn = document.getElementById('backBtn');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      if (currentStep > 1) showStep(currentStep - 1);
+    });
+  }
+
+  // Save as draft
   const draftBtn = Array.from(document.querySelectorAll('.btn-text'))
     .find(b => b.textContent.trim() === 'Save as draft');
   if (draftBtn) {
     draftBtn.addEventListener('click', () => {
-      alert('Draft saved.\nIn a real build, this would persist progress and let you resume from the Connections list.');
+      alert('Draft saved at Step ' + currentStep + ' of ' + totalSteps + '.\nIn a real build, this would persist progress and let you resume from the Connections list.');
     });
   }
+
+  // Test connection buttons (Step 2)
+  document.querySelectorAll('.test-conn-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const original = btn.textContent;
+      btn.textContent = 'Testing…';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = '✓ 200 OK · 142 ms';
+        btn.style.color = 'var(--groupon-green)';
+        btn.style.borderColor = 'var(--groupon-green)';
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.disabled = false;
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 2500);
+      }, 700);
+    });
+  });
 })();
 </script>
 
