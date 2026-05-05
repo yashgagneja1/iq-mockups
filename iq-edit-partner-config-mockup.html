@@ -161,6 +161,12 @@
     border-bottom: 1px solid var(--antd-bd-soft);
     padding: 0 16px;
   }
+  .env-tabs {
+    display: flex; align-items: stretch;
+    background: #fff; border: 1px solid var(--antd-bd-soft);
+    border-radius: 8px; padding: 0 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
   .tab {
     padding: 14px 16px; font-size: 14px; font-weight: 500;
     color: var(--antd-text-2); cursor: pointer;
@@ -369,7 +375,7 @@
               <span class="partner">ReleafClinics</span>
             </h1>
             <p class="desc">
-              Manage configuration for both pre-production and production environments. Identity fields are shared and read-only; connection details are editable per environment.
+              Switch between pre-production and production tabs to view or edit each environment's identity and connection details.
             </p>
           </div>
           <div class="actions">
@@ -377,11 +383,23 @@
           </div>
         </div>
 
-        <!-- Read-only metadata card -->
+        <!-- Page-level env tabs (switches both identity and connection details) -->
+        <div class="env-tabs">
+          <div class="tab">
+            <span>Pre-production</span>
+            <span class="tab-status orange">Setup In Progress</span>
+          </div>
+          <div class="tab active">
+            <span>Production</span>
+            <span class="tab-status gray">Setup Not Started</span>
+          </div>
+        </div>
+
+        <!-- Read-only metadata card (per-env) -->
         <div class="card">
           <div class="card-header">
             <h3>Partner identity</h3>
-            <span class="meta">Set during partner creation · cannot be changed</span>
+            <span class="meta">Production environment · set during partner creation · cannot be changed</span>
           </div>
           <div class="card-body">
             <div class="descriptions">
@@ -422,17 +440,11 @@
           </div>
         </div>
 
-        <!-- Editable form card with env tabs -->
+        <!-- Editable form card (per-env) -->
         <div class="card">
-          <div class="card-tabs">
-            <div class="tab">
-              <span>Pre-production</span>
-              <span class="tab-status orange">Setup In Progress</span>
-            </div>
-            <div class="tab active">
-              <span>Production</span>
-              <span class="tab-status gray">Setup Not Started</span>
-            </div>
+          <div class="card-header">
+            <h3>Connection details</h3>
+            <span class="meta">Production environment</span>
           </div>
           <div class="card-body">
 
