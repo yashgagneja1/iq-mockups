@@ -634,7 +634,24 @@
                 <label><span class="req">*</span>Enter Checkout Timer Duration</label>
                 <input id="checkoutTimerInput" class="input" placeholder="Enter Duration in minutes (Only Numeric value)" />
               </div>
-              <div class="field"><!-- third column intentionally empty: tpp shows no conditional for Create a new secret key --></div>
+              <div class="field" id="parentPartnerField" style="display: none;">
+                <label><span class="req">*</span>Select existing/parent partner secret key</label>
+                <select id="parentPartnerSelect" class="select">
+                  <option value="">Please select existing partner</option>
+                  <option value="octo_gocity_UK">octo_gocity_UK</option>
+                  <option value="1stMILE">1stMILE</option>
+                  <option value="360_Chicago">360_Chicago</option>
+                  <option value="Bask-Health">Bask-Health</option>
+                  <option value="Bokun">Bokun</option>
+                  <option value="ReleafClinics">ReleafClinics</option>
+                  <option value="Redeam_ES">Redeam_ES</option>
+                  <option value="octo_palisis_NL">octo_palisis_NL</option>
+                  <option value="TripToGo">TripToGo</option>
+                  <option value="mamenta">mamenta</option>
+                  <option value="Viator">Viator</option>
+                  <option value="Ingresso">Ingresso</option>
+                </select>
+              </div>
             </div>
 
             <div class="divider"></div>
@@ -771,12 +788,21 @@
     });
   }
 
-  // Note: tpp does NOT show any conditional input when Create a new secret key = Yes.
-  // The radio simply controls whether a new key is generated server-side on submit.
+  // Secret key Yes/No → show/hide "Select existing/parent partner secret key"
+  // tpp shows the parent-partner dropdown only when No is selected (because
+  // the new partner needs to inherit/share the secret key of an existing one).
+  const secretRadios = document.getElementById('secretRadios');
+  const parentField  = document.getElementById('parentPartnerField');
+  if (secretRadios && parentField) {
+    secretRadios.addEventListener('radio-change', e => {
+      parentField.style.display = e.detail.value === 'no' ? '' : 'none';
+    });
+  }
 
   // Initial state on page load — apply current radio defaults
   populateCountries(getCheckedValue('regionRadios') || 'NA');
-  if (timerField) timerField.style.display = getCheckedValue('timerRadios') === 'yes' ? '' : 'none';
+  if (timerField)  timerField.style.display  = getCheckedValue('timerRadios')  === 'yes' ? '' : 'none';
+  if (parentField) parentField.style.display = getCheckedValue('secretRadios') === 'no'  ? '' : 'none';
 
   // Checkbox: toggle .checked
   document.querySelectorAll('.checkbox').forEach(cb => {
