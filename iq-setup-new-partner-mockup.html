@@ -199,6 +199,12 @@
   .step-content.active { display: block; }
   .test-conn-btn { width: fit-content; }
 
+  /* Pin each conditional field to its own column so siblings don't shift
+     left/right when one of them is hidden. */
+  #partnerCountryField { grid-column: 1; }
+  #checkoutTimerField  { grid-column: 2; }
+  #parentPartnerField  { grid-column: 3; }
+
   /* ===== Deals table (Step 3) ===== */
   .deals-tbl {
     width: 100%; border: 1px solid var(--antd-bd-soft); border-radius: 8px;
