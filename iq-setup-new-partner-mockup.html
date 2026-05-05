@@ -631,15 +631,10 @@
                 </select>
               </div>
               <div class="field" id="checkoutTimerField" style="display: none;">
-                <label><span class="req">*</span>Checkout Timer Duration</label>
-                <input id="checkoutTimerInput" class="input" placeholder="Enter duration in minutes" />
-                <span class="hint">Time in minutes before unconfirmed holds expire.</span>
+                <label><span class="req">*</span>Enter Checkout Timer Duration</label>
+                <input id="checkoutTimerInput" class="input" placeholder="Enter Duration in minutes (Only Numeric value)" />
               </div>
-              <div class="field" id="secretKeyExpiryField">
-                <label><span class="req">*</span>Secret key expiry (days)</label>
-                <input id="secretKeyExpiryInput" class="input" value="365" />
-                <span class="hint">Auto-generated key will expire after this many days.</span>
-              </div>
+              <div class="field"><!-- third column intentionally empty: tpp shows no conditional for Create a new secret key --></div>
             </div>
 
             <div class="divider"></div>
@@ -736,23 +731,22 @@
   });
 
   // ===== Conditional fields based on radio selections =====
+  // Country options match tpp's actual partner-portal data for each region.
   const COUNTRIES = {
-    NA:   ['US — United States', 'CA — Canada', 'MX — Mexico'],
-    EMEA: ['GB — United Kingdom', 'IE — Ireland', 'DE — Germany', 'FR — France',
-           'IT — Italy', 'ES — Spain', 'NL — Netherlands', 'BE — Belgium',
-           'AT — Austria', 'CH — Switzerland', 'PL — Poland', 'CZ — Czech Republic'],
+    NA:   ['US (USD)', 'CA (CAD)'],
+    EMEA: ['BE (EUR)', 'CA (CAD)', 'DE (EUR)', 'ES (EUR)', 'FR (EUR)', 'IE (EUR)',
+           'IT (EUR)', 'NL (EUR)', 'PL (PLN)', 'UK (GBP)', 'AU (AUD)', 'AE (AED)'],
   };
   const countrySelect = document.getElementById('partnerCountrySelect');
 
   function populateCountries(region) {
     if (!countrySelect) return;
-    countrySelect.innerHTML = '';
+    countrySelect.innerHTML = '<option value="">Please select Partner Country</option>';
     const opts = COUNTRIES[region] || [];
-    opts.forEach((label, i) => {
+    opts.forEach(label => {
       const opt = document.createElement('option');
-      opt.value = label.split(' — ')[0];
+      opt.value = label.split(' ')[0];
       opt.textContent = label;
-      if (i === 0) opt.selected = true;
       countrySelect.appendChild(opt);
     });
   }
@@ -768,7 +762,7 @@
     regionRadios.addEventListener('radio-change', e => populateCountries(e.detail.value));
   }
 
-  // Timer Yes/No → show/hide Checkout Timer Duration
+  // Timer Yes/No → show/hide Enter Checkout Timer Duration
   const timerRadios = document.getElementById('timerRadios');
   const timerField  = document.getElementById('checkoutTimerField');
   if (timerRadios && timerField) {
@@ -777,19 +771,12 @@
     });
   }
 
-  // Secret Yes/No → show/hide Secret key expiry
-  const secretRadios = document.getElementById('secretRadios');
-  const secretField  = document.getElementById('secretKeyExpiryField');
-  if (secretRadios && secretField) {
-    secretRadios.addEventListener('radio-change', e => {
-      secretField.style.display = e.detail.value === 'yes' ? '' : 'none';
-    });
-  }
+  // Note: tpp does NOT show any conditional input when Create a new secret key = Yes.
+  // The radio simply controls whether a new key is generated server-side on submit.
 
   // Initial state on page load — apply current radio defaults
   populateCountries(getCheckedValue('regionRadios') || 'NA');
-  if (timerField)  timerField.style.display  = getCheckedValue('timerRadios')  === 'yes' ? '' : 'none';
-  if (secretField) secretField.style.display = getCheckedValue('secretRadios') === 'yes' ? '' : 'none';
+  if (timerField) timerField.style.display = getCheckedValue('timerRadios') === 'yes' ? '' : 'none';
 
   // Checkbox: toggle .checked
   document.querySelectorAll('.checkbox').forEach(cb => {
