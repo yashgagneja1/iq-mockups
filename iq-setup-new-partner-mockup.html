@@ -797,10 +797,6 @@
 
 <script>
 (function () {
-  // Wizard navigation state — declared early so applyIntegrationModes
-  // (defined further down) can safely reference it without hitting a TDZ.
-  let currentStep = 1;
-
   // Radio: clicking any .radio in a .radio-group sets it as the only checked one
   document.querySelectorAll('.radio-group').forEach(group => {
     group.addEventListener('click', e => {
@@ -953,7 +949,7 @@
   // Total steps is dynamic: 3 for GROUPON_CONNECT, 2 for OCTO / CUSTOM
   // (the Connect Deals step only applies when the partner uses the Groupon
   // Simulator, which is GROUPON_CONNECT-only).
-  // currentStep is declared at the top of the IIFE.
+  let currentStep = 1;
   const STEP_TITLES = {1: 'Add Partner', 2: 'Connect to Partner', 3: 'Connect Deals'};
 
   function getTotalSteps() {
@@ -1034,7 +1030,7 @@
     .find(b => b.textContent.trim() === 'Save as draft');
   if (draftBtn) {
     draftBtn.addEventListener('click', () => {
-      alert('Draft saved at Step ' + currentStep + ' of ' + getTotalSteps() + '.\nIn a real build, this would persist progress and let you resume from the Connections list.');
+      alert('Draft saved at Step ' + currentStep + ' of ' + totalSteps + '.\nIn a real build, this would persist progress and let you resume from the Connections list.');
     });
   }
 
