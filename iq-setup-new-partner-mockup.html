@@ -321,6 +321,10 @@
     box-shadow: 0 0 0 2px rgba(0,124,31,0.12);
   }
   .input::placeholder { color: rgba(0,0,0,0.25); }
+  .input[readonly] {
+    background: #fafafa; color: var(--antd-text-2);
+    cursor: not-allowed; pointer-events: none;
+  }
   .select {
     appearance: none; padding-right: 30px; cursor: pointer;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M2 4l3 3 3-3' stroke='%23999' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
@@ -515,21 +519,7 @@
               <div class="form-row one" style="margin-top: 12px;">
                 <div class="field">
                   <label><span class="req">*</span>Taxonomy Name</label>
-                  <select class="select">
-                    <option value="">Select Taxonomy Name</option>
-                    <option value="3pip-ss-preprod-partner-134" selected>3pip-ss-preprod-partner-134</option>
-                    <option value="3pip-ss-preprod-partner-136">3pip-ss-preprod-partner-136</option>
-                    <option value="3pip-ss-preprod-partner-161">3pip-ss-preprod-partner-161</option>
-                    <option value="3pip-ss-preprod-partner-162">3pip-ss-preprod-partner-162</option>
-                    <option value="3pip-ss-preprod-partner-163">3pip-ss-preprod-partner-163</option>
-                    <option value="3pip-ss-preprod-partner-164">3pip-ss-preprod-partner-164</option>
-                    <option value="3pip-ss-preprod-partner-165">3pip-ss-preprod-partner-165</option>
-                    <option value="3pip-ss-preprod-partner-166">3pip-ss-preprod-partner-166</option>
-                    <option value="3pip-ss-preprod-partner-167">3pip-ss-preprod-partner-167</option>
-                    <option value="3pip-ss-preprod-partner-168">3pip-ss-preprod-partner-168</option>
-                    <option value="3pip-ss-preprod-partner-169">3pip-ss-preprod-partner-169</option>
-                    <option value="3pip-ss-preprod-partner-170">3pip-ss-preprod-partner-170</option>
-                  </select>
+                  <input class="input mono" value="3pip-ss-preprod-partner-134" readonly />
                   <span class="hint">Acquisition Method ID is derived automatically from the selected taxonomy.</span>
                 </div>
               </div>
@@ -543,21 +533,7 @@
               <div class="form-row one" style="margin-top: 12px;">
                 <div class="field">
                   <label><span class="req">*</span>Taxonomy Name</label>
-                  <select class="select">
-                    <option value="">Select Taxonomy Name</option>
-                    <option value="3pip-ss-prod-partner-134" selected>3pip-ss-prod-partner-134</option>
-                    <option value="3pip-ss-prod-partner-136">3pip-ss-prod-partner-136</option>
-                    <option value="3pip-ss-prod-partner-161">3pip-ss-prod-partner-161</option>
-                    <option value="3pip-ss-prod-partner-162">3pip-ss-prod-partner-162</option>
-                    <option value="3pip-ss-prod-partner-163">3pip-ss-prod-partner-163</option>
-                    <option value="3pip-ss-prod-partner-164">3pip-ss-prod-partner-164</option>
-                    <option value="3pip-ss-prod-partner-165">3pip-ss-prod-partner-165</option>
-                    <option value="3pip-ss-prod-partner-166">3pip-ss-prod-partner-166</option>
-                    <option value="3pip-ss-prod-partner-167">3pip-ss-prod-partner-167</option>
-                    <option value="3pip-ss-prod-partner-168">3pip-ss-prod-partner-168</option>
-                    <option value="3pip-ss-prod-partner-169">3pip-ss-prod-partner-169</option>
-                    <option value="3pip-ss-prod-partner-170">3pip-ss-prod-partner-170</option>
-                  </select>
+                  <input class="input mono" value="3pip-ss-prod-partner-134" readonly />
                   <span class="hint">Acquisition Method ID is derived automatically from the selected taxonomy.</span>
                 </div>
               </div>
@@ -774,20 +750,31 @@
             <!-- Step 3 content -->
             <div class="step-content step-3">
 
-              <h3 class="form-section-title">User Emails for accessing Groupon Simulator</h3>
-              <p class="form-section-help">Add team members who need access to the Groupon Simulator for this partner.</p>
+              <!-- User Emails — only shown when Integration Type = GROUPON_CONNECT -->
+              <div id="step3UserEmails">
+                <h3 class="form-section-title">User Emails for accessing Groupon Simulator</h3>
+                <p class="form-section-help">Add team members who need access to the Groupon Simulator for this partner.</p>
 
-              <div id="emailChips" class="email-chips" style="margin-bottom: 12px;"></div>
-              <div id="emailEmpty" class="empty-state">No users are currently added</div>
+                <div id="emailChips" class="email-chips" style="margin-bottom: 12px;"></div>
+                <div id="emailEmpty" class="empty-state">No users are currently added</div>
 
-              <div class="form-row" style="margin-top: 12px; align-items: end;">
-                <div class="field" style="margin-bottom: 0;">
-                  <label>Add user email</label>
-                  <input id="emailInput" class="input" placeholder="user@groupon.com" />
+                <div class="form-row" style="margin-top: 12px; align-items: end;">
+                  <div class="field" style="margin-bottom: 0;">
+                    <label>Add user email</label>
+                    <input id="emailInput" class="input" placeholder="user@groupon.com" />
+                  </div>
+                  <div class="field" style="margin-bottom: 0;">
+                    <label style="visibility: hidden;">_</label>
+                    <button id="saveEmailsBtn" class="btn" style="width: fit-content;">Save Emails</button>
+                  </div>
                 </div>
-                <div class="field" style="margin-bottom: 0;">
-                  <label style="visibility: hidden;">_</label>
-                  <button id="saveEmailsBtn" class="btn" style="width: fit-content;">Save Emails</button>
+              </div>
+
+              <!-- Skip message — shown when Integration Type is OCTO or CUSTOM -->
+              <div id="step3SkipMessage" style="display: none;">
+                <div class="alert" style="margin-bottom: 16px;">
+                  <span class="icn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+                  <span>No further configuration is required. The Groupon Simulator is only used for the <b>GROUPON_CONNECT</b> integration. Click <b>Confirm Completion</b> below to finish.</span>
                 </div>
               </div>
 
@@ -889,21 +876,31 @@
   if (timerField)  timerField.style.display  = getCheckedValue('timerRadios')  === 'yes' ? '' : 'none';
   if (parentField) parentField.style.display = getCheckedValue('secretRadios') === 'no'  ? '' : 'none';
 
-  // ===== Step 2 mode: default vs CUSTOM (driven by Integration Type) =====
+  // ===== Step 2 + Step 3 modes driven by Integration Type =====
+  // Step 2: CUSTOM => endpoint maps, otherwise the two URL inputs.
+  // Step 3: only show User Emails when GROUPON_CONNECT; OCTO/CUSTOM show
+  //         a short skip message because the Groupon Simulator is only
+  //         relevant for the GROUPON_CONNECT integration.
   const integrationSelect = document.getElementById('integrationTypeSelect');
-  const step2Default = document.getElementById('step2Default');
-  const step2Custom  = document.getElementById('step2Custom');
+  const step2Default      = document.getElementById('step2Default');
+  const step2Custom       = document.getElementById('step2Custom');
+  const step3UserEmails   = document.getElementById('step3UserEmails');
+  const step3SkipMessage  = document.getElementById('step3SkipMessage');
 
-  function applyStep2Mode() {
-    if (!integrationSelect || !step2Default || !step2Custom) return;
-    const isCustom = integrationSelect.value === 'CUSTOM';
-    step2Default.style.display = isCustom ? 'none' : '';
-    step2Custom.style.display  = isCustom ? '' : 'none';
+  function applyIntegrationModes() {
+    if (!integrationSelect) return;
+    const v = integrationSelect.value;
+    const isCustom         = v === 'CUSTOM';
+    const showUserEmails   = v === 'GROUPON_CONNECT' || v === '';
+    if (step2Default)     step2Default.style.display     = isCustom ? 'none' : '';
+    if (step2Custom)      step2Custom.style.display      = isCustom ? '' : 'none';
+    if (step3UserEmails)  step3UserEmails.style.display  = showUserEmails ? '' : 'none';
+    if (step3SkipMessage) step3SkipMessage.style.display = showUserEmails ? 'none' : '';
   }
 
   if (integrationSelect) {
-    integrationSelect.addEventListener('change', applyStep2Mode);
-    applyStep2Mode(); // initial state
+    integrationSelect.addEventListener('change', applyIntegrationModes);
+    applyIntegrationModes(); // initial state
   }
 
   // Add / Remove custom endpoint rows — works for any number of
