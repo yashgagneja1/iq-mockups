@@ -750,25 +750,36 @@
             <!-- Step 3 content -->
             <div class="step-content step-3">
 
-              <h3 class="form-section-title">User Emails for accessing Groupon Simulator</h3>
-              <p class="form-section-help">Add team members who need access to the Groupon Simulator for this partner.</p>
+              <!-- User Emails — only shown when Integration Type = GROUPON_CONNECT -->
+              <div id="step3UserEmails">
+                <h3 class="form-section-title">User Emails for accessing Groupon Simulator</h3>
+                <p class="form-section-help">Add team members who need access to the Groupon Simulator for this partner.</p>
 
-              <div id="emailChips" class="email-chips" style="margin-bottom: 12px;"></div>
-              <div id="emailEmpty" class="empty-state">No users are currently added</div>
+                <div id="emailChips" class="email-chips" style="margin-bottom: 12px;"></div>
+                <div id="emailEmpty" class="empty-state">No users are currently added</div>
 
-              <div class="form-row" style="margin-top: 12px; align-items: end;">
-                <div class="field" style="margin-bottom: 0;">
-                  <label>Add user email</label>
-                  <input id="emailInput" class="input" placeholder="user@groupon.com" />
+                <div class="form-row" style="margin-top: 12px; align-items: end;">
+                  <div class="field" style="margin-bottom: 0;">
+                    <label>Add user email</label>
+                    <input id="emailInput" class="input" placeholder="user@groupon.com" />
+                  </div>
+                  <div class="field" style="margin-bottom: 0;">
+                    <label style="visibility: hidden;">_</label>
+                    <button id="saveEmailsBtn" class="btn" style="width: fit-content;">Save Emails</button>
+                  </div>
                 </div>
-                <div class="field" style="margin-bottom: 0;">
-                  <label style="visibility: hidden;">_</label>
-                  <button id="saveEmailsBtn" class="btn" style="width: fit-content;">Save Emails</button>
+              </div>
+
+              <!-- Skip message — shown when Integration Type is OCTO or CUSTOM -->
+              <div id="step3SkipMessage" style="display: none;">
+                <div class="alert" style="margin-bottom: 16px;">
+                  <span class="icn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+                  <span>No further configuration is required. The Groupon Simulator is only used for the <b>GROUPON_CONNECT</b> integration. Click <b>Confirm Completion</b> below to finish.</span>
                 </div>
               </div>
 
             </div>
-            <!-- /step-3 (only reached when Integration Type = GROUPON_CONNECT) -->
+            <!-- /step-3 -->
 
           </div>
 
@@ -865,26 +876,26 @@
   if (timerField)  timerField.style.display  = getCheckedValue('timerRadios')  === 'yes' ? '' : 'none';
   if (parentField) parentField.style.display = getCheckedValue('secretRadios') === 'no'  ? '' : 'none';
 
-  // ===== Step 2 mode + dynamic total steps driven by Integration Type =====
+  // ===== Step 2 + Step 3 modes driven by Integration Type =====
   // Step 2: CUSTOM => endpoint maps, otherwise the two URL inputs.
-  // Total steps: 3 for GROUPON_CONNECT (User Emails on Step 3), 2 for
-  //              OCTO / CUSTOM (Step 3 is skipped entirely).
+  // Step 3: only show User Emails when GROUPON_CONNECT; OCTO/CUSTOM show
+  //         a short skip message because the Groupon Simulator is only
+  //         relevant for the GROUPON_CONNECT integration.
   const integrationSelect = document.getElementById('integrationTypeSelect');
   const step2Default      = document.getElementById('step2Default');
   const step2Custom       = document.getElementById('step2Custom');
+  const step3UserEmails   = document.getElementById('step3UserEmails');
+  const step3SkipMessage  = document.getElementById('step3SkipMessage');
 
   function applyIntegrationModes() {
     if (!integrationSelect) return;
     const v = integrationSelect.value;
-    const isCustom = v === 'CUSTOM';
-    if (step2Default) step2Default.style.display = isCustom ? 'none' : '';
-    if (step2Custom)  step2Custom.style.display  = isCustom ? '' : 'none';
-
-    // Refresh current step display so step indicator + footer labels reflect
-    // the (possibly new) total step count.
-    if (typeof currentStep !== 'undefined') {
-      showStep(currentStep);
-    }
+    const isCustom         = v === 'CUSTOM';
+    const showUserEmails   = v === 'GROUPON_CONNECT' || v === '';
+    if (step2Default)     step2Default.style.display     = isCustom ? 'none' : '';
+    if (step2Custom)      step2Custom.style.display      = isCustom ? '' : 'none';
+    if (step3UserEmails)  step3UserEmails.style.display  = showUserEmails ? '' : 'none';
+    if (step3SkipMessage) step3SkipMessage.style.display = showUserEmails ? 'none' : '';
   }
 
   if (integrationSelect) {
@@ -946,58 +957,36 @@
   });
 
   // ===== Multi-step wizard navigation =====
-  // Total steps is dynamic: 3 for GROUPON_CONNECT, 2 for OCTO / CUSTOM
-  // (the Connect Deals step only applies when the partner uses the Groupon
-  // Simulator, which is GROUPON_CONNECT-only).
   let currentStep = 1;
-  const STEP_TITLES = {1: 'Add Partner', 2: 'Connect to Partner', 3: 'Connect Deals'};
-
-  function getTotalSteps() {
-    const sel = document.getElementById('integrationTypeSelect');
-    if (!sel) return 3;
-    const v = sel.value;
-    return (v === 'OCTO' || v === 'CUSTOM') ? 2 : 3;
-  }
-  function getStepLabel(n) {
-    const total = getTotalSteps();
-    return 'Step ' + n + ' of ' + total + ' · ' + (STEP_TITLES[n] || '');
-  }
-  function getContinueLabel(n) {
-    const total = getTotalSteps();
-    if (n === 1) return 'Submit & continue';
-    if (n < total) return 'Continue';
-    return 'Confirm Completion';
-  }
+  const totalSteps = 3;
+  const stepLabels = {
+    1: 'Step 1 of 3 · Add Partner',
+    2: 'Step 2 of 3 · Connect to Partner',
+    3: 'Step 3 of 3 · Connect Deals',
+  };
+  const continueLabels = {
+    1: 'Submit & continue',
+    2: 'Continue',
+    3: 'Confirm Completion',
+  };
 
   function showStep(n) {
-    const total = getTotalSteps();
-    if (n > total) n = total; // safety: clamp to last valid step
-
     document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
     const target = document.querySelector('.step-content.step-' + n);
     if (target) target.classList.add('active');
 
-    // Step indicators: hide any beyond the current total, mark done/active
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= totalSteps; i++) {
       const ind = document.getElementById('stepInd' + i);
       if (!ind) continue;
       ind.classList.remove('active', 'done');
-      if (i > total) {
-        ind.style.display = 'none';
-      } else {
-        ind.style.display = '';
-        if (i < n) ind.classList.add('done');
-        else if (i === n) ind.classList.add('active');
-      }
+      if (i < n) ind.classList.add('done');
+      else if (i === n) ind.classList.add('active');
     }
-    // The line connecting Step 2 to Step 3 should also hide when Step 3 is gone
-    const tail2 = document.querySelector('#stepInd2 .tail');
-    if (tail2) tail2.style.visibility = (total < 3) ? 'hidden' : '';
 
     const footerText = document.getElementById('footerStepText');
-    if (footerText) footerText.textContent = getStepLabel(n);
+    if (footerText) footerText.textContent = stepLabels[n];
     const continueLabel = document.getElementById('continueLabel');
-    if (continueLabel) continueLabel.textContent = getContinueLabel(n);
+    if (continueLabel) continueLabel.textContent = continueLabels[n];
     const backBtn = document.getElementById('backBtn');
     if (backBtn) backBtn.style.display = n > 1 ? '' : 'none';
 
@@ -1008,8 +997,7 @@
   const continueBtn = document.getElementById('continueBtn');
   if (continueBtn) {
     continueBtn.addEventListener('click', () => {
-      const total = getTotalSteps();
-      if (currentStep < total) {
+      if (currentStep < totalSteps) {
         showStep(currentStep + 1);
       } else {
         alert('Partner setup complete!\nIn a real build, the partner would now appear in the Connections list with status "Setup In Progress" → "Certified" → "Ready" as configuration is verified.');
