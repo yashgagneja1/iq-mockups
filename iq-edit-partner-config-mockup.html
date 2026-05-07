@@ -288,6 +288,54 @@
     color: var(--groupon-green); cursor: pointer; font-weight: 500; font-size: 14px;
   }
   .kv-tbl .link:hover { text-decoration: underline; }
+  .kv-tbl td .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px; color: var(--antd-text);
+  }
+
+  /* ===== Edit Configuration modal ===== */
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,0.45);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-card {
+    background: #fff; border-radius: 8px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    width: 100%; max-width: 760px; max-height: 86vh;
+    display: flex; flex-direction: column;
+  }
+  .modal-header {
+    padding: 16px 24px; border-bottom: 1px solid var(--antd-bd-soft);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-header h3 { margin: 0; font-size: 16px; font-weight: 600; color: var(--gray-900); }
+  .modal-close {
+    width: 32px; height: 32px; border: 0; background: transparent;
+    color: var(--gray-500); font-size: 22px; line-height: 1; cursor: pointer;
+    border-radius: 50%;
+  }
+  .modal-close:hover { background: var(--gray-100); color: var(--gray-900); }
+  .modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; min-height: 0; }
+  .modal-footer {
+    padding: 14px 24px; border-top: 1px solid var(--antd-bd-soft);
+    display: flex; justify-content: flex-end; gap: 8px;
+  }
+  .json-editor {
+    width: 100%; min-height: 360px; padding: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px; line-height: 1.55;
+    border: 1px solid var(--antd-bd); border-radius: 6px;
+    background: #fafafa; color: var(--antd-text);
+    resize: vertical; outline: 0;
+  }
+  .json-editor:focus { border-color: var(--antd-blue); box-shadow: 0 0 0 2px rgba(0,124,31,0.12); }
+  .json-error {
+    margin-top: 10px; padding: 8px 12px; border-radius: 6px;
+    background: #fff1f0; border: 1px solid #ffa39e; color: #cf1322;
+    font-size: 13px;
+  }
 
   .descriptions-value .ext-link {
     color: var(--antd-blue); display: inline-flex; align-items: center; gap: 4px;
@@ -550,24 +598,28 @@
 
             <div class="divider"></div>
 
-            <h3 class="form-section-title">Attributes</h3>
-            <p class="form-section-help">Custom key/value pairs scoped to this environment. Used by the integration to pass partner-specific settings.</p>
+            <h3 class="form-section-title">Advanced (Operations)</h3>
+            <p class="form-section-help">Operational settings used by the Connection runtime. Managed by the Operations team.</p>
 
             <table class="kv-tbl">
               <thead>
                 <tr>
-                  <th style="width: 35%;">Key</th>
+                  <th style="width: 50%;">Attribute</th>
                   <th>Value</th>
-                  <th style="width: 100px;">Actions</th>
                 </tr>
               </thead>
-              <tbody id="attributesTbody">
+              <tbody id="advancedOpsTbody">
                 <!-- rows populated by JS based on the active env -->
               </tbody>
             </table>
-            <button id="addAttrBtn" class="btn" style="margin-top: 12px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Add Another Attribute
+
+            <div class="divider"></div>
+
+            <h3 class="form-section-title">Advanced (Developers)</h3>
+            <p class="form-section-help">Direct access to the complete configuration JSON. This bypasses the form fields above — use carefully.</p>
+            <button id="editConfigBtn" class="btn" style="width: fit-content;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4z"/></svg>
+              Edit configuration
             </button>
 
           </div>
@@ -594,6 +646,25 @@
   </div>
 </div>
 
+<!-- ===== Edit Configuration modal (Advanced (Developers)) ===== -->
+<div id="configModal" class="modal-backdrop" style="display: none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="configModalTitle">Edit configuration</h3>
+      <button id="closeModalBtn" class="modal-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="form-section-help">JSON below represents the complete configuration for this environment. Edit carefully.</p>
+      <textarea id="configJsonInput" class="json-editor" spellcheck="false"></textarea>
+      <div id="configJsonError" class="json-error" style="display: none;"></div>
+    </div>
+    <div class="modal-footer">
+      <button id="modalCancelBtn" class="btn">Cancel</button>
+      <button id="modalSaveBtn" class="btn btn-primary">Save changes</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function () {
   const envData = {
@@ -612,11 +683,12 @@
       footerNote:          'Once confirmed, the pre-production environment moves to <b>Certified</b>.',
       secretKey:           'IkxBXLpV2vwXdKT1Oui0zJUHDQUw0op1LM6bKczXhyJf0NEqx6UOwrLtAPAW6JZ4kgHw3Z5Lv2RXPv2LF9jhLQ',
       userEmails:          ['ygagneja@groupon.com'],
-      attributes:          [
-        { key: 'max_units_per_order',   value: '10' },
-        { key: 'supports_refunds',      value: 'true' },
-        { key: 'sandbox_mode',          value: 'true' },
-      ],
+      operations: {
+        isMPFPartner:                 'false',
+        isGIP2Partner:                'false',
+        TransactionalConnectTimeout:  '15000',
+        IngestionConnectTimeout:      '60000',
+      },
     },
     prod: {
       identityMeta:        'Production environment · set during partner creation · cannot be changed',
@@ -633,11 +705,12 @@
       footerNote:          'Once confirmed, the production environment moves to <b>Ready</b>.',
       secretKey:           'kF8mP3qX9zR7tY4wL2nA6bD5jH1cV0sE8gT4mP7yQ2rW5kN3vX9zL6tD1jR4hG7aB2cE5pK8mY3qT6wF9zL2vN',
       userEmails:          [],
-      attributes:          [
-        { key: 'max_units_per_order',   value: '5' },
-        { key: 'supports_refunds',      value: 'true' },
-        { key: 'rate_limit_per_minute', value: '100' },
-      ],
+      operations: {
+        isMPFPartner:                 'true',
+        isGIP2Partner:                'false',
+        TransactionalConnectTimeout:  '30000',
+        IngestionConnectTimeout:      '120000',
+      },
     },
   };
 
@@ -707,7 +780,7 @@
     setHTML('footerNote',       d.footerNote);
     renderSecret();
     renderEmails();
-    renderAttributes();
+    renderOperations();
   }
 
   // Tab click: toggle active + apply env data
@@ -773,74 +846,114 @@
     });
   }
 
-  // ===== Attributes (per-env key/value pairs) =====
-  const attrTbody  = document.getElementById('attributesTbody');
-  const addAttrBtn = document.getElementById('addAttrBtn');
+  // ===== Advanced (Operations) — fixed keys with editable values, per-env =====
+  const advancedOpsTbody = document.getElementById('advancedOpsTbody');
+  const OPERATIONS_KEYS = [
+    { key: 'isMPFPartner',                type: 'boolean' },
+    { key: 'isGIP2Partner',               type: 'boolean' },
+    { key: 'TransactionalConnectTimeout', type: 'number', placeholder: 'milliseconds' },
+    { key: 'IngestionConnectTimeout',     type: 'number', placeholder: 'milliseconds' },
+  ];
 
   function escAttr(s) {
     return String(s).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
   }
-  function buildAttrRow(key, value) {
-    const tr = document.createElement('tr');
-    tr.innerHTML =
-      '<td><input class="input attr-key"   value="' + escAttr(key)   + '" placeholder="key" /></td>' +
-      '<td><input class="input attr-value" value="' + escAttr(value) + '" placeholder="value" /></td>' +
-      '<td><a class="link remove-attr" href="#">Remove</a></td>';
-    return tr;
-  }
-  function renderAttributes() {
-    if (!attrTbody) return;
-    const list = envData[currentEnv].attributes || [];
-    attrTbody.innerHTML = '';
-    if (list.length === 0) {
-      // keep at least one empty row so the user can start typing
-      list.push({ key: '', value: '' });
-    }
-    list.forEach(a => attrTbody.appendChild(buildAttrRow(a.key, a.value)));
-  }
-  function syncAttrsFromDom() {
-    if (!attrTbody) return;
-    envData[currentEnv].attributes = Array.from(attrTbody.querySelectorAll('tr')).map(tr => ({
-      key:   tr.querySelector('.attr-key').value,
-      value: tr.querySelector('.attr-value').value,
-    }));
-  }
-
-  if (addAttrBtn && attrTbody) {
-    addAttrBtn.addEventListener('click', () => {
-      syncAttrsFromDom();
-      envData[currentEnv].attributes.push({ key: '', value: '' });
-      renderAttributes();
-    });
-  }
-  if (attrTbody) {
-    // Edits: keep envData in sync as user types so tab switches don't lose work
-    attrTbody.addEventListener('input', e => {
-      if (e.target.matches('.attr-key, .attr-value')) syncAttrsFromDom();
-    });
-    // Remove: drop the row (or clear it if it's the last one)
-    attrTbody.addEventListener('click', e => {
-      const link = e.target.closest('.remove-attr');
-      if (!link) return;
-      e.preventDefault();
-      syncAttrsFromDom();
-      const idx = Array.from(attrTbody.children).indexOf(link.closest('tr'));
-      if (idx >= 0) {
-        const list = envData[currentEnv].attributes;
-        if (list.length <= 1) {
-          list[0] = { key: '', value: '' };
-        } else {
-          list.splice(idx, 1);
-        }
+  function renderOperations() {
+    if (!advancedOpsTbody) return;
+    const ops = envData[currentEnv].operations || {};
+    advancedOpsTbody.innerHTML = '';
+    OPERATIONS_KEYS.forEach(spec => {
+      const tr = document.createElement('tr');
+      let valueCell = '';
+      const current = ops[spec.key] != null ? String(ops[spec.key]) : '';
+      if (spec.type === 'boolean') {
+        valueCell =
+          '<select class="select ops-input" data-key="' + spec.key + '">' +
+            '<option value="true"'  + (current === 'true'  ? ' selected' : '') + '>true</option>' +
+            '<option value="false"' + (current === 'false' ? ' selected' : '') + '>false</option>' +
+          '</select>';
+      } else {
+        valueCell =
+          '<input class="input ops-input" data-key="' + spec.key +
+          '" value="' + escAttr(current) +
+          '" placeholder="' + escAttr(spec.placeholder || '') + '" />';
       }
-      renderAttributes();
+      tr.innerHTML = '<td><span class="mono">' + spec.key + '</span></td><td>' + valueCell + '</td>';
+      advancedOpsTbody.appendChild(tr);
     });
   }
 
-  // Initial render: secret mask + emails + attributes for default env
+  if (advancedOpsTbody) {
+    const handleOpsChange = e => {
+      const el = e.target.closest('.ops-input');
+      if (!el) return;
+      const ops = envData[currentEnv].operations = envData[currentEnv].operations || {};
+      ops[el.dataset.key] = el.value;
+    };
+    advancedOpsTbody.addEventListener('input',  handleOpsChange);
+    advancedOpsTbody.addEventListener('change', handleOpsChange);
+  }
+
+  // ===== Advanced (Developers) — Edit configuration modal =====
+  const editConfigBtn   = document.getElementById('editConfigBtn');
+  const configModal     = document.getElementById('configModal');
+  const configJsonInput = document.getElementById('configJsonInput');
+  const configJsonError = document.getElementById('configJsonError');
+  const configModalTitle= document.getElementById('configModalTitle');
+  const closeModalBtn   = document.getElementById('closeModalBtn');
+  const modalCancelBtn  = document.getElementById('modalCancelBtn');
+  const modalSaveBtn    = document.getElementById('modalSaveBtn');
+
+  function openConfigModal() {
+    if (!configModal || !configJsonInput) return;
+    configJsonInput.value = JSON.stringify(envData[currentEnv], null, 2);
+    if (configModalTitle) {
+      configModalTitle.textContent = 'Edit ' +
+        (currentEnv === 'preprod' ? 'Pre-production' : 'Production') + ' configuration';
+    }
+    if (configJsonError) configJsonError.style.display = 'none';
+    configModal.style.display = 'flex';
+  }
+  function closeConfigModal() {
+    if (configModal) configModal.style.display = 'none';
+  }
+  function saveConfigModal() {
+    if (!configJsonInput) return;
+    let parsed;
+    try {
+      parsed = JSON.parse(configJsonInput.value);
+    } catch (err) {
+      if (configJsonError) {
+        configJsonError.textContent = 'Invalid JSON: ' + err.message;
+        configJsonError.style.display = '';
+      }
+      return;
+    }
+    envData[currentEnv] = parsed;
+    applyEnv(currentEnv); // re-render every env-bound field
+    closeConfigModal();
+    setTimeout(() => alert('Configuration saved.\nIn a real build, this would persist to the backend.'), 50);
+  }
+
+  if (editConfigBtn)  editConfigBtn.addEventListener('click',  openConfigModal);
+  if (closeModalBtn)  closeModalBtn.addEventListener('click',  closeConfigModal);
+  if (modalCancelBtn) modalCancelBtn.addEventListener('click', closeConfigModal);
+  if (modalSaveBtn)   modalSaveBtn.addEventListener('click',   saveConfigModal);
+  if (configModal) {
+    // Close on backdrop click
+    configModal.addEventListener('click', e => {
+      if (e.target === configModal) closeConfigModal();
+    });
+    // Close on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && configModal.style.display !== 'none') closeConfigModal();
+    });
+  }
+
+  // Initial render: secret mask + emails + operations for default env
   renderSecret();
   renderEmails();
-  renderAttributes();
+  renderOperations();
 })();
 </script>
 
