@@ -268,6 +268,27 @@
     font-size: 13px;
   }
   .empty-state.hidden { display: none; }
+
+  /* ===== Attributes table (key-value, per-env) ===== */
+  .kv-tbl {
+    width: 100%; border: 1px solid var(--antd-bd-soft); border-radius: 8px;
+    border-collapse: separate; border-spacing: 0; overflow: hidden;
+  }
+  .kv-tbl th, .kv-tbl td {
+    padding: 10px 14px; border-bottom: 1px solid var(--antd-bd-soft);
+    text-align: left; vertical-align: middle;
+  }
+  .kv-tbl thead th {
+    background: #fafafa; font-weight: 600; font-size: 12px;
+    color: var(--antd-text); text-transform: none;
+  }
+  .kv-tbl tbody tr:last-child td { border-bottom: none; }
+  .kv-tbl input.input { margin: 0; }
+  .kv-tbl .link {
+    color: var(--groupon-green); cursor: pointer; font-weight: 500; font-size: 14px;
+  }
+  .kv-tbl .link:hover { text-decoration: underline; }
+
   .descriptions-value .ext-link {
     color: var(--antd-blue); display: inline-flex; align-items: center; gap: 4px;
   }
@@ -527,6 +548,28 @@
               </div>
             </div>
 
+            <div class="divider"></div>
+
+            <h3 class="form-section-title">Attributes</h3>
+            <p class="form-section-help">Custom key/value pairs scoped to this environment. Used by the integration to pass partner-specific settings.</p>
+
+            <table class="kv-tbl">
+              <thead>
+                <tr>
+                  <th style="width: 35%;">Key</th>
+                  <th>Value</th>
+                  <th style="width: 100px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="attributesTbody">
+                <!-- rows populated by JS based on the active env -->
+              </tbody>
+            </table>
+            <button id="addAttrBtn" class="btn" style="margin-top: 12px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Another Attribute
+            </button>
+
           </div>
 
           <!-- Footer / actions -->
@@ -569,6 +612,11 @@
       footerNote:          'Once confirmed, the pre-production environment moves to <b>Certified</b>.',
       secretKey:           'IkxBXLpV2vwXdKT1Oui0zJUHDQUw0op1LM6bKczXhyJf0NEqx6UOwrLtAPAW6JZ4kgHw3Z5Lv2RXPv2LF9jhLQ',
       userEmails:          ['ygagneja@groupon.com'],
+      attributes:          [
+        { key: 'max_units_per_order',   value: '10' },
+        { key: 'supports_refunds',      value: 'true' },
+        { key: 'sandbox_mode',          value: 'true' },
+      ],
     },
     prod: {
       identityMeta:        'Production environment · set during partner creation · cannot be changed',
@@ -585,6 +633,11 @@
       footerNote:          'Once confirmed, the production environment moves to <b>Ready</b>.',
       secretKey:           'kF8mP3qX9zR7tY4wL2nA6bD5jH1cV0sE8gT4mP7yQ2rW5kN3vX9zL6tD1jR4hG7aB2cE5pK8mY3qT6wF9zL2vN',
       userEmails:          [],
+      attributes:          [
+        { key: 'max_units_per_order',   value: '5' },
+        { key: 'supports_refunds',      value: 'true' },
+        { key: 'rate_limit_per_minute', value: '100' },
+      ],
     },
   };
 
@@ -654,6 +707,7 @@
     setHTML('footerNote',       d.footerNote);
     renderSecret();
     renderEmails();
+    renderAttributes();
   }
 
   // Tab click: toggle active + apply env data
@@ -719,9 +773,74 @@
     });
   }
 
-  // Initial render: ensure mask is shown + emails populated for default env
+  // ===== Attributes (per-env key/value pairs) =====
+  const attrTbody  = document.getElementById('attributesTbody');
+  const addAttrBtn = document.getElementById('addAttrBtn');
+
+  function escAttr(s) {
+    return String(s).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  }
+  function buildAttrRow(key, value) {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><input class="input attr-key"   value="' + escAttr(key)   + '" placeholder="key" /></td>' +
+      '<td><input class="input attr-value" value="' + escAttr(value) + '" placeholder="value" /></td>' +
+      '<td><a class="link remove-attr" href="#">Remove</a></td>';
+    return tr;
+  }
+  function renderAttributes() {
+    if (!attrTbody) return;
+    const list = envData[currentEnv].attributes || [];
+    attrTbody.innerHTML = '';
+    if (list.length === 0) {
+      // keep at least one empty row so the user can start typing
+      list.push({ key: '', value: '' });
+    }
+    list.forEach(a => attrTbody.appendChild(buildAttrRow(a.key, a.value)));
+  }
+  function syncAttrsFromDom() {
+    if (!attrTbody) return;
+    envData[currentEnv].attributes = Array.from(attrTbody.querySelectorAll('tr')).map(tr => ({
+      key:   tr.querySelector('.attr-key').value,
+      value: tr.querySelector('.attr-value').value,
+    }));
+  }
+
+  if (addAttrBtn && attrTbody) {
+    addAttrBtn.addEventListener('click', () => {
+      syncAttrsFromDom();
+      envData[currentEnv].attributes.push({ key: '', value: '' });
+      renderAttributes();
+    });
+  }
+  if (attrTbody) {
+    // Edits: keep envData in sync as user types so tab switches don't lose work
+    attrTbody.addEventListener('input', e => {
+      if (e.target.matches('.attr-key, .attr-value')) syncAttrsFromDom();
+    });
+    // Remove: drop the row (or clear it if it's the last one)
+    attrTbody.addEventListener('click', e => {
+      const link = e.target.closest('.remove-attr');
+      if (!link) return;
+      e.preventDefault();
+      syncAttrsFromDom();
+      const idx = Array.from(attrTbody.children).indexOf(link.closest('tr'));
+      if (idx >= 0) {
+        const list = envData[currentEnv].attributes;
+        if (list.length <= 1) {
+          list[0] = { key: '', value: '' };
+        } else {
+          list.splice(idx, 1);
+        }
+      }
+      renderAttributes();
+    });
+  }
+
+  // Initial render: secret mask + emails + attributes for default env
   renderSecret();
   renderEmails();
+  renderAttributes();
 })();
 </script>
 
