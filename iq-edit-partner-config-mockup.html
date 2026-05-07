@@ -283,7 +283,10 @@
     color: var(--antd-text); text-transform: none;
   }
   .kv-tbl tbody tr:last-child td { border-bottom: none; }
-  .kv-tbl input.input { margin: 0; }
+  .kv-tbl input.input, .kv-tbl select.select { margin: 0; }
+  /* Boolean selects (true/false) shouldn't stretch full-width — keep them
+     compact like the Partner Vertical/Type/Integration Type dropdowns. */
+  .kv-tbl select.select-bool { max-width: 160px; }
   .kv-tbl .link {
     color: var(--groupon-green); cursor: pointer; font-weight: 500; font-size: 14px;
   }
@@ -884,7 +887,7 @@
       const current = ops[spec.key] != null ? String(ops[spec.key]) : '';
       if (spec.type === 'boolean') {
         valueCell =
-          '<select class="select ops-input" data-key="' + spec.key + '">' +
+          '<select class="select select-bool ops-input" data-key="' + spec.key + '">' +
             '<option value="true"'  + (current === 'true'  ? ' selected' : '') + '>true</option>' +
             '<option value="false"' + (current === 'false' ? ' selected' : '') + '>false</option>' +
           '</select>';
