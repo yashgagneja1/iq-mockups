@@ -284,9 +284,54 @@
   }
   .kv-tbl tbody tr:last-child td { border-bottom: none; }
   .kv-tbl input.input, .kv-tbl select.select { margin: 0; }
-  /* Boolean selects (true/false) shouldn't stretch full-width — keep them
-     compact like the Partner Vertical/Type/Integration Type dropdowns. */
-  .kv-tbl select.select-bool { max-width: 160px; }
+
+  /* ===== Custom AntD-style dropdown for booleans =====
+     Native <select> elements show OS-default option chrome when opened,
+     which clashes with the rest of the form. This component renders both
+     the trigger and the menu so the open state matches AntD's Select. */
+  .dropdown-bool {
+    position: relative; display: inline-block;
+    width: 140px; font-size: 14px; vertical-align: middle;
+  }
+  .dropdown-bool-trigger {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; height: 36px; padding: 0 11px; gap: 8px;
+    border: 1px solid var(--antd-bd); border-radius: 6px;
+    background: #fff; cursor: pointer;
+    font: inherit; color: var(--antd-text);
+    transition: border-color .12s, box-shadow .12s;
+  }
+  .dropdown-bool-trigger:hover { border-color: var(--antd-blue); }
+  .dropdown-bool.open > .dropdown-bool-trigger {
+    border-color: var(--antd-blue);
+    box-shadow: 0 0 0 2px rgba(0,124,31,0.12);
+  }
+  .dropdown-bool-chevron {
+    flex-shrink: 0; opacity: 0.55; color: var(--antd-text-2);
+    transition: transform .15s;
+  }
+  .dropdown-bool.open > .dropdown-bool-trigger .dropdown-bool-chevron {
+    transform: rotate(180deg);
+  }
+  .dropdown-bool-menu {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: #fff;
+    border: 1px solid var(--antd-bd-soft);
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08), 0 3px 6px rgba(0,0,0,0.05);
+    padding: 4px; display: none; z-index: 50;
+  }
+  .dropdown-bool.open > .dropdown-bool-menu { display: block; }
+  .dropdown-bool-option {
+    padding: 7px 10px; cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px; color: var(--antd-text);
+    transition: background .1s;
+  }
+  .dropdown-bool-option:hover { background: #f5f5f5; }
+  .dropdown-bool-option.selected {
+    background: #f6ffed; color: var(--groupon-green); font-weight: 500;
+  }
   .kv-tbl .link {
     color: var(--groupon-green); cursor: pointer; font-weight: 500; font-size: 14px;
   }
@@ -886,11 +931,20 @@
       let valueCell = '';
       const current = ops[spec.key] != null ? String(ops[spec.key]) : '';
       if (spec.type === 'boolean') {
+        const cur = current === 'true' ? 'true' : 'false';
         valueCell =
-          '<select class="select select-bool ops-input" data-key="' + spec.key + '">' +
-            '<option value="true"'  + (current === 'true'  ? ' selected' : '') + '>true</option>' +
-            '<option value="false"' + (current === 'false' ? ' selected' : '') + '>false</option>' +
-          '</select>';
+          '<div class="dropdown-bool" data-key="' + spec.key + '" data-value="' + cur + '">' +
+            '<button type="button" class="dropdown-bool-trigger">' +
+              '<span class="dropdown-bool-value">' + cur + '</span>' +
+              '<svg class="dropdown-bool-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">' +
+                '<path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+              '</svg>' +
+            '</button>' +
+            '<div class="dropdown-bool-menu" role="listbox">' +
+              '<div class="dropdown-bool-option' + (cur === 'true'  ? ' selected' : '') + '" data-value="true" role="option">true</div>' +
+              '<div class="dropdown-bool-option' + (cur === 'false' ? ' selected' : '') + '" data-value="false" role="option">false</div>' +
+            '</div>' +
+          '</div>';
       } else {
         valueCell =
           '<input class="input ops-input" data-key="' + spec.key +
@@ -903,6 +957,7 @@
   }
 
   if (advancedOpsTbody) {
+    // Numeric inputs: sync on every keystroke
     const handleOpsChange = e => {
       const el = e.target.closest('.ops-input');
       if (!el) return;
@@ -911,7 +966,42 @@
     };
     advancedOpsTbody.addEventListener('input',  handleOpsChange);
     advancedOpsTbody.addEventListener('change', handleOpsChange);
+
+    // Custom boolean dropdown: open/close + select option
+    advancedOpsTbody.addEventListener('click', e => {
+      const trigger = e.target.closest('.dropdown-bool-trigger');
+      if (trigger) {
+        e.stopPropagation();
+        const dd = trigger.parentElement;
+        const wasOpen = dd.classList.contains('open');
+        document.querySelectorAll('.dropdown-bool.open').forEach(d => d.classList.remove('open'));
+        if (!wasOpen) dd.classList.add('open');
+        return;
+      }
+      const opt = e.target.closest('.dropdown-bool-option');
+      if (opt) {
+        const dd = opt.closest('.dropdown-bool');
+        const value = opt.dataset.value;
+        dd.dataset.value = value;
+        dd.querySelector('.dropdown-bool-value').textContent = value;
+        dd.querySelectorAll('.dropdown-bool-option').forEach(o =>
+          o.classList.toggle('selected', o.dataset.value === value)
+        );
+        dd.classList.remove('open');
+        const ops = envData[currentEnv].operations = envData[currentEnv].operations || {};
+        ops[dd.dataset.key] = value;
+      }
+    });
   }
+  // Close any open boolean dropdown on outside click / Escape
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.dropdown-bool.open').forEach(d => d.classList.remove('open'));
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.dropdown-bool.open').forEach(d => d.classList.remove('open'));
+    }
+  });
 
   // ===== Advanced (Developers) — Edit configuration modal =====
   const editConfigBtn   = document.getElementById('editConfigBtn');
